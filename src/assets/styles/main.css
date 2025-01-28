@@ -1,0 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Anton&display=swap');
+@font-face {
+    font-family: "Lulo Clean One Bold";
+    src: url("https://db.onlinewebfonts.com/t/164a60c2e090248befbcf32fdd5af386.eot");
+    src: url("https://db.onlinewebfonts.com/t/164a60c2e090248befbcf32fdd5af386.eot?#iefix")format("embedded-opentype"),
+    url("https://db.onlinewebfonts.com/t/164a60c2e090248befbcf32fdd5af386.woff2")format("woff2"),
+    url("https://db.onlinewebfonts.com/t/164a60c2e090248befbcf32fdd5af386.woff")format("woff"),
+    url("https://db.onlinewebfonts.com/t/164a60c2e090248befbcf32fdd5af386.ttf")format("truetype"),
+    url("https://db.onlinewebfonts.com/t/164a60c2e090248befbcf32fdd5af386.svg#Lulo Clean One Bold")format("svg");
+}
+@font-face {
+    font-family: 'Futura LT Regular';
+    font-style: normal;
+    font-weight: normal;
+    src: local('Futura LT Regular'), url('../fonts/FuturaLT.ttf') format('truetype');
+}

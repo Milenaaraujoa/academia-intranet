@@ -1,30 +1,92 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
-  <router-view/>
+
+    <!-- Condicionalmente renderiza o NavBar e Footer -->
+    <NavBar v-if="$route.meta.showNavbar !== false" :logo="logo_src" :alt="app_name" />
+    <router-view/>
+    <Footer v-if="$route.meta.showFooter !== false" />
 </template>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+<script>
+import NavBar from './components/Navbar.vue'
+import Footer from './components/Footer.vue'
+
+
+export default {
+  components: {
+    NavBar,
+    Footer
+  },
+  data(){
+    return{
+      logo_src: './img/logo.png',
+      app_name: 'Academia Água Vida'
+    }
+  }
+}
+</script>
+
+<style lang="scss">
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
-nav {
-  padding: 30px;
+html, body {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
 }
 
-nav a {
-  font-weight: bold;
-  color: #2c3e50;
+body {
+    background-color: #F2EEF0;
+    font-size: 80%;
+    flex: 1;
 }
 
-nav a.router-link-exact-active {
-  color: #42b983;
+.app-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.content {
+    flex: 1;
+}
+
+/* O conteúdo principal precisa ocupar o espaço restante antes do footer */
+main {
+    flex: 1;
+    width: 100%;
+}
+hr {
+    border-color: #EA6F07;
+    width: 100%;
+}
+h1{
+    color:#087285;
+    font-family: 'Lulo Clean One Bold';
+    text-align: center;
+    margin: auto;
+}
+h2{
+    color: #FFFFFF;
+    background-color: #087285;
+    border-radius: 7px;
+    font-family: 'Futura LT Regular';
+    text-align: center;
+    width: 554px;
+    margin: auto;
+    padding: 10px;
+    margin-top: 10px;
+    margin-bottom: 30px;
+}
+h4{
+    color:#087285;
+    font-family: 'Futura LT Regular';
+    margin-left: 25px;
+    font-size: 1.3rem;
 }
 </style>
