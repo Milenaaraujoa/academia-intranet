@@ -9,7 +9,7 @@
     </div>
 </template>
 
-<style>
+<style scoped>
 .container {
     position: relative;
     text-align: center;

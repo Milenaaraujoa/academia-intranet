@@ -1,20 +1,23 @@
 <template>
-
-    <!-- Condicionalmente renderiza o NavBar e Footer -->
+    
+    <Menu v-if="$route.meta.showMenu !== false" />
     <NavBar v-if="$route.meta.showNavbar !== false" :logo="logo_src" :alt="app_name" />
-    <router-view/>
+    <RouterView/>
     <Footer v-if="$route.meta.showFooter !== false" />
+    
 </template>
 
 <script>
 import NavBar from './components/Navbar.vue'
 import Footer from './components/Footer.vue'
+import Menu from './components/Menu.vue'
 
 
 export default {
   components: {
     NavBar,
-    Footer
+    Footer,
+    Menu
   },
   data(){
     return{

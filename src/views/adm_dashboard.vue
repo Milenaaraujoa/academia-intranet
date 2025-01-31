@@ -1,44 +1,4 @@
 <template>
-      <div class="bg3">
-      <img src="/adm_dashboard/img/backlaranja.png" alt="" />
-    </div>
-
-    <div class="container">
-      <div class="navigation">
-        <img src="img/logo.png" alt="" />
-        <ul>
-          <li>
-            <a href="#">
-              <span class="title">Página Inicial</span>
-            </a>
-          </li>
-          <li>
-            <router-link to="/relatorio">
-              <span class="title">Relatórios</span>
-            </router-link>
-          </li>
-          <li>
-            <a href="eventos.html">
-              <span class="title">Eventos</span>
-            </a>
-          </li>
-          <li>
-            <a href="turmas.html">
-              <span class="title">Turmas</span>
-            </a>
-          </li>
-          <li>
-            <a href="../login_user.html">
-              <span class="title">Logout</span>
-            </a>
-          </li>
-        </ul>
-        <div class="bg1">
-          <img src="/adm_dashboard/img/backazulc.png" alt="" />
-        </div>
-      </div>
-    </div>
-
     <div class="main">
       <div class="cardbox">
       <div class="card1">
@@ -217,10 +177,7 @@
       </router-link>
           </div>
       </div> 
-    </div>
-    <div class="bg2">
-      <img src="/adm_dashboard/img/backazule.png" alt="" />
-    </div>
+      </div>
 </template>
 
 <style>
@@ -1000,4 +957,5 @@ export default {
     });
   }
 };
+
 </script>
