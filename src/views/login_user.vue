@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <div class="top-bar">
-            <a href="./pagina_original.html"><img src="img/casinha_icon.png" alt="" /></a>
+            <a href="https://www.academiaaguavida.com.br/"><img src="img/casinha_icon.png" alt="" /></a>
         </div>
 
         <div class="login-container-wrapper">

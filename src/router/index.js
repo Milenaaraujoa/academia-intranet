@@ -1,25 +1,23 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
-import Modalidade from '@/views/Modalidade.vue'
-import Formulario from '@/views/Formulario.vue'
+import Home from '../views/Home.vue'
 
 const routes = [
   {
     path: '/',
     name: 'home',
-    component: HomeView,
+    component: Home,
     meta: { showMenu: false }
   },
   {
     path: '/Formulario',
     name: 'Formulario',
-    component: Formulario,
+    component: () => import('../views/Formulario.vue'),
     meta: { showMenu: false }
   },
   {
     path: '/Modalidade',
     name: 'Modalidade',
-    component: Modalidade,
+    component: () => import('../views/Modalidade.vue'),
     meta: { showMenu: false }
   },
   {
@@ -67,8 +65,8 @@ const routes = [
 ]
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+  history: createWebHistory(),
   routes
-})
+});
 
 export default router

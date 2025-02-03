@@ -2,7 +2,7 @@
     <div class="container">
         <img src="img/modalidade.png" class="image"/>
         <div class="button-container">
-            <router-link to="/home">
+            <router-link to="/Formulario">
                 <button>Realizar pré cadastro</button>
             </router-link>
         </div>

@@ -1,10 +1,10 @@
 <template>
-    
+     <div id="app">
     <Menu v-if="$route.meta.showMenu !== false" />
-    <NavBar v-if="$route.meta.showNavbar !== false" :logo="logo_src" :alt="app_name" />
+    <NavBar v-if="$route.meta.showNavbar !== false" :logo="logo_src" />
     <RouterView/>
     <Footer v-if="$route.meta.showFooter !== false" />
-    
+  </div>
 </template>
 
 <script>
