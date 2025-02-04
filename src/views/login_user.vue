@@ -10,12 +10,12 @@
             </div>
             <div class="login-container">
                 <h3>ACESSE SUA CONTA:</h3>
-                <form action="#">
+                <form @submit.prevent="login">
                     <label for="email">Email:</label>
-                    <input type="email" id="email" name="email" placeholder="fulano@gmail.com" required />
+                    <input type="email" id="email" v-model="email" placeholder="fulano@gmail.com" required />
 
                     <label for="password">Senha:</label>
-                    <input type="password" id="password" name="password" placeholder="***********" required />
+                    <input type="password" id="password" v-model="password" placeholder="***********" required />
 
                     
                     <router-link to="/redef_senha" class="forgot-password">Esqueceu sua senha?</router-link>
@@ -33,6 +33,38 @@
     </div>
 
 </template>
+
+<script>
+import api from '@/services/api.js';
+
+export default {
+    data() {
+        return {
+            email: '',
+            password: ''
+        }
+    },
+    methods: {
+        async login() {
+            try {
+                const response = await api.post('/api/auth/login', {
+                    email: this.email,
+                    password: this.password
+                });
+
+                const token = response.data.token;
+        localStorage.setItem('token', token);
+        alert('Login realizado com sucesso!');
+        // Redirecionar para a página principal ou outra página
+        this.$router.push('/home');
+            } catch (error) {
+                console.error('Erro ao fazer login:', error);
+        alert('Erro ao fazer login. Verifique suas credenciais.');
+            }
+        }
+    }
+}
+</script>
 
 <style scoped>
 

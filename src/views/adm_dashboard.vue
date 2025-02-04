@@ -164,7 +164,7 @@
       <div class="card4">
         <h1>E V E N T O S</h1>
               <div class="slide1">
-                      <img src="img/arraia.jpg" alt="Arraiá Tradicional">
+                      <img src="../assets/img/arraia.jpg" alt="Arraiá Tradicional">
                       <p>Texto com informações gerais</p>
               </div>
               <div class="slide2">

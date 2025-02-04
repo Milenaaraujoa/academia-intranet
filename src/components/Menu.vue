@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="bg3">
-      <img src="/img/backlaranja.png" alt="Background Topo" />
+      <img src="../assets/img/backlaranja.png" alt="Background Topo" />
     </div>
     <div class="navigation">
       <img src="img/logo.png" alt="Logo" />
@@ -33,11 +33,11 @@
         </li>
       </ul>
       <div class="bg1">
-      <img src="/img/backazulc.png" alt="Background Esquerda" />
+      <img src="../assets/img/backazulc.png" alt="Background Esquerda" />
     </div>
     </div>
     <div class="bg2">
-      <img src="/img/backazule.png" alt="Background Direita" />
+      <img src="../assets/img/backazule.png" alt="Background Direita" />
     </div>
   </div>
   </template>
