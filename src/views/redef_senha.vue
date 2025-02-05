@@ -1,13 +1,13 @@
 <template>
     <div class="container">
     <div class="top-bar">
-        <a href="https://www.academiaaguavida.com.br/"><img src="img/casinha_icon.png" alt="Home"></a>
+        <a href="https://www.academiaaguavida.com.br/"><img src="../assets/img/casinha_icon.png" alt="Home"></a>
     </div>
 
     <div class="login-container-wrapper">
         <div class="login-container">
             <div class="img-logo">
-                <img src="img/logo.png" alt="Logo Academia">
+                <img src="../assets/img/logo.png" alt="Logo Academia">
             </div>
             <h3>Redefinir senha</h3>
             <form @submit.prevent="handleSubmit">

@@ -42,25 +42,25 @@ const routes = [
     path: '/adm_dashboard',
     name: 'adm_dashboard',
     component: () => import('../views/adm_dashboard.vue'),
-    meta: { showFooter: false, showNavbar: false, showMenu: false }
+    meta: { showFooter: false, showNavbar: false }
   },
   {
     path: '/relatorio',
     name: 'relatorio',
     component: () => import('../views/relatorio.vue'),
-    meta: { showFooter: false, showNavbar: false, showMenu: false }
+    meta: { showFooter: false, showNavbar: false }
   },
   {
     path: '/turmas',
     name: 'turmas',
     component: () => import('../views/turmas.vue'),
-    meta: { showFooter: false, showNavbar: false, showMenu: false }
+    meta: { showFooter: false, showNavbar: false }
   },
   {
     path: '/eventos',
     name: 'eventos',
     component: () => import('../views/eventos.vue'),
-    meta: { showFooter: false, showNavbar: false, showMenu: false }
+    meta: { showFooter: false, showNavbar: false}
   }
 ]
 

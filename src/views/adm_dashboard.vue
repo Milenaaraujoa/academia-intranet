@@ -169,7 +169,7 @@
               </div>
               <div class="slide2">
                  
-                      <img src="img/pascoa.jpg" alt="Carnaval Animado">
+                      <img src="../assets/img/pascoa.jpg" alt="Carnaval Animado">
                       <p>Texto com informações gerais</p>
               </div>
               <router-link to="/turmas">

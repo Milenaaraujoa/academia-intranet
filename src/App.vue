@@ -11,6 +11,7 @@
 import NavBar from './components/Navbar.vue'
 import Footer from './components/Footer.vue'
 import Menu from './components/Menu.vue'
+import logo from '@/assets/img/logo.png'
 
 
 export default {
@@ -21,7 +22,7 @@ export default {
   },
   data(){
     return{
-      logo_src: './img/logo.png',
+      logo_src: logo,
       app_name: 'Academia Água Vida'
     }
   }

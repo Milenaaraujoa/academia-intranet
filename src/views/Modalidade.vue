@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <img src="img/modalidade.png" class="image"/>
+        <img src="../assets/img/modalidade.png" class="image"/>
         <div class="button-container">
             <router-link to="/Formulario">
                 <button>Realizar pré cadastro</button>
@@ -17,7 +17,7 @@
 
 .image {
     width: 100%;
-    margin: 0;
+    margin-bottom: -5px;
 }
 
 .button-container {

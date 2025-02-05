@@ -7,7 +7,7 @@
                         <div class="form-group">
                             <div class="input-group">
                                 <label for="nome">Nome:</label>
-                                <input type="text" id="nome" v-model="form.nome" required />
+                                <input type="text" class="nome" id="nome" v-model="form.nome" required />
                             </div>
                             <div class="input-group">
                                 <label for="tipo">Tipo: </label>
@@ -26,15 +26,17 @@
                                 </div>
                                 <label for="importar">Importar Imagem: </label>
                                 <div class="buttonp">
-                                    <button type="button">Importar</button>
+                                    <button type="button" class='buttonp'>Importar</button>
                                 </div>
                             </div>
                             <div class="buttonp">
-                                <button type="submit">PUBLICAR</button>
+                                
                             </div>
                         </div>
                     </form>
+                    
                 </div>
+                
                 <div class="card2">
                     <div class="calendario">
                         <div class="mes-ano">
@@ -108,13 +110,14 @@
                     </div>
                 </div>
             </div>
+            <button type="submit" class="btn-publicar">Publicar</button>
             <div class="eventoscard">
                 <div class="evento1">
-                    <img src="img/arraia.jpg" alt="Arraiá Tradicional">
+                    <img src="../assets/img/arraia.jpg" alt="Arraiá Tradicional">
                     <p>Texto com informações gerais</p>
                 </div>
                 <div class="evento2">
-                    <img src="img/pascoa.jpg" alt="Carnaval Animado">
+                    <img src="../assets/img/pascoa.jpg" alt="Carnaval Animado">
                     <p>Texto com informações gerais</p>
                 </div>
             </div>
@@ -193,7 +196,7 @@ export default {
             // Handle month change
         },
         editEvent() {
-            // Handle event edit
+            this.showModal = true;
         },
         deleteEvent() {
             // Handle event delete
@@ -398,12 +401,12 @@ p{
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    height: 50vh;
+    height: 30vh;
     margin-top: -1px;
 }
 
 .tituloturma {
-    margin-top: -10px;
+    margin-top: -8px;
 }
 
 .form-group {
@@ -441,7 +444,7 @@ select {
     padding: 10px;
     box-sizing: border-box;
     width: 100%;
-    margin-left: 30px;
+    margin-left: 20px;
 }
 
 .nome {
@@ -454,16 +457,19 @@ select {
 input[type="time"]{
     margin-left: 8px;
 }
+.nome{
+    margin-left: 7px;
+}
 
 button {
     background-color: #FF5722;
     color: white;
-    padding: 9px 9px;
+    padding: 0;
     width: 100px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    font: 0.8rem "Futura LT Regular", sans-serif;
+    font: 1rem "Futura LT Regular", sans-serif;
     margin-right: 50px;
     height: 32px;
 
@@ -474,35 +480,38 @@ button {
 }
 
 .buttonp {
-    text-align: right;
+    text-align: center;
+    padding: 0px;
 }
 
 .button1 {
     text-align: right;
     position: right;
 }
-
+.btn-publicar{
+    position: right;
+    align-items: right;
+    margin-left: 500px;
+    padding: 5px;
+}
 
 
 /*=====================EVENTOS===================*/
 .cardBoxevent{
     background-color: #087285;
-    padding: 20px;
+    padding: 0;
     border-radius: 10px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    height: 55vh;
+    height: 40vh;
     margin-top: -1px;
     flex: 1 1 calc(50% - 40px);
-    margin-right: 20px;
-    
 }
 
 .conteudo{
     display: flex;
     justify-content: space-between;
     gap: 20px;
-    padding-left: 30px;
-    padding-right: 30px;
+    padding: 0;
     
 }
 .form-group{
@@ -516,7 +525,7 @@ button {
 .eventoscard{
     display: flex;
     justify-content: space-between;
-    margin-top: 50px;
+    margin-top: 20px;
     gap: 10px;
     padding-left: 30px;
     padding-right: 30px;

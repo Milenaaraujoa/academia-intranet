@@ -4,7 +4,7 @@
       <img src="../assets/img/backlaranja.png" alt="Background Topo" />
     </div>
     <div class="navigation">
-      <img src="img/logo.png" alt="Logo" />
+      <img src="../assets/img/logo.png" alt="Logo" />
       <ul>
         <li>
           <router-link to="/adm_dashboard">

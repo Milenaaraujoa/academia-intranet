@@ -3,7 +3,7 @@
     <h1 id="3">Formulário</h1>
 
     <div class="form-box">
-      <img class="img-logo" src="img/logo.png" />
+      <img class="img-logo" src="../assets/img/logo.png" />
       <form @submit.prevent="handleSubmit">
         <div class="form-group">
           <div class="input-group">
@@ -391,7 +391,9 @@ input[type="date"] {
   border-radius: 10px;
   width: 700px;
   margin: auto;
-  margin-top: 30px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
 }
 
 .container h2 {

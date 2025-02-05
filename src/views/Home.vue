@@ -7,7 +7,7 @@
           <table>
             <thead>
               <tr>
-                <th>Nome</th>
+                <th>Categoria</th>
                 <th>Faixa Etária</th>
                 <th>Vagas</th>
                 <th>Horário</th>
@@ -69,7 +69,9 @@
     </section>
   
     <div id="4" class="containerform">
-      <h2 class="form"><a href="formulario.html">Formulário de Inscrição</a></h2>
+      <h2 class="form"> <router-link to="/Formulario">
+              Formulário de Inscrição
+            </router-link></h2>
     </div>
   
     <h4 id="h4">CONHEÇA NOSSOS EVENTOS</h4>
@@ -77,15 +79,15 @@
     <div class="carousel-container">
       <div class="carousel-wrapper" ref="carouselWrapper">
         <div class="carousel-slide">
-          <img src="img/arraia.jpg" alt="Arraiá Tradicional">
+          <img src="../assets/img/arraia.jpg" alt="Arraiá Tradicional">
           <div class="caption">ARRAIÁ</div>
         </div>
         <div class="carousel-slide">
-          <img src="img/pascoa.jpg" alt="Carnaval Animado">
+          <img src="../assets/img/pascoa.jpg" alt="Carnaval Animado">
           <div class="caption">PÁSCOA</div>
         </div>
         <div class="carousel-slide">
-          <img src="img/olimpiada.jpg" alt="Festival de Música">
+          <img src="../assets/img/olimpiada.jpg" alt="Festival de Música">
           <div class="caption">OLIMPÍADA</div>
         </div>
       </div>

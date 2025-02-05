@@ -1,12 +1,12 @@
 <template>
     <div class="container">
         <div class="top-bar">
-            <a href="https://www.academiaaguavida.com.br/"><img src="img/casinha_icon.png" alt="" /></a>
+            <a href="https://www.academiaaguavida.com.br/"><img src="../assets/img/casinha_icon.png" alt="" /></a>
         </div>
 
         <div class="login-container-wrapper">
             <div class="img-logo">
-                <img src="img/logo.png" />
+                <img src="../assets/img/logo.png" />
             </div>
             <div class="login-container">
                 <h3>ACESSE SUA CONTA:</h3>
@@ -55,7 +55,7 @@ export default {
                 const token = response.data.token;
         localStorage.setItem('token', token);
         alert('Login realizado com sucesso!');
-        // Redirecionar para a página principal ou outra página
+        // Redirecionar para a pï¿½gina principal ou outra pï¿½gina
         this.$router.push('/home');
             } catch (error) {
                 console.error('Erro ao fazer login:', error);

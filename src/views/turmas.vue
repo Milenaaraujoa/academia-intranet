@@ -15,7 +15,7 @@
           </div>
           <div class="input-group">
             <label for="modalidade" class="modalidade">Modalidade:</label>
-            <select v-model="form.modalidade" required>
+            <select v-model="form.modalidade"  required>
               <option value="">Selecione uma opção:</option>
               <option value="natacao">Natação</option>
               <option value="natacao_bb">Natação Bebê</option>
@@ -24,12 +24,12 @@
           </div>
           <div class="input-row">
             <div class="input-group">
-              <label for="horario">Horário:</label>
-              <input type="time" id="horario" v-model="form.horario" required />
+              <label for="horario" class="horario">Horário:</label>
+              <input type="time" id="horario" v-model="form.horario"  required />
             </div>
             <div class="input-group">
               <label for="diaSemana">Dia da Semana:</label>
-              <select v-model="form.dia_semana" required>
+              <select v-model="form.dia_semana"  required>
                 <option value="">Selecione uma opção:</option>
                 <option value="segunda">Segunda-Feira</option>
                 <option value="terca">Terça-Feira</option>
@@ -43,7 +43,7 @@
           <div class="input-row">
             <div class="input-group">
               <label for="idade">Faixa Etária:</label>
-              <select v-model="form.faixa_etaria" required>
+              <select v-model="form.faixa_etaria" class="select" required>
                 <option value="">Selecione uma opção:</option>
                 <option value="bebe1">6 meses a 2 anos - acompanhado*</option>
                 <option value="bebe2">2 a 3 anos de idade</option>
@@ -53,13 +53,17 @@
                 <option value="adulto">+15</option>
               </select>
             </div>
+            
           </div>
+          <div class="buttonp">
+        
+      </div>
         </div>
       </form>
-      <div class="buttonp">
-        <button @click="submitForm">Publicar</button>
-      </div>
+      
     </div>
+    <button @click="submitForm" class="btn-publicar">Publicar</button>
+
     <div class="card-tabela">
       <section class="turmas">
         <details>
@@ -515,74 +519,6 @@ tr:last-child td {
   border-bottom: none; /* Remova a borda inferior para a última linha */
 }
 
-/*Calendário*/
-
-.legenda {
-  justify-content: center;
-  align-items: center;
-  display: flex;
-  font: 0.4em "futura LT Regular";
-}
-
-.calendario {
-  background-color: #fff;
-  box-shadow: 0 4px 8px #ccc;
-  transition: 0.1s;
-  padding: 2px;
-  border-radius: 8px;
-  border: none;
-  width: 100%;
-  text-align: center;
-}
-
-.calendario td,
-th {
-  border-right: none;
-  border-bottom: none;
-}
-
-.calendario:hover {
-  box-shadow: 0 8px 16px #ccc;
-}
-
-.mes-ano,
-.setas {
-  display: inline-block;
-}
-
-.mes-ano {
-  margin-right: 30%;
-  font: 1rem "Futura LT Regular", sans-serif;
-  font-weight: bold;
-  padding: 5px;
-}
-.nome-mes,
-.nome-mes th {
-  background-color: #fff;
-  font: 0.8rem "Futura LT Regular", sans-serif;
-  font-weight: bold;
-  border: none;
-}
-.dias td {
-  padding: 12px;
-  font-size: 10px;
-}
-
-.disponivel {
-  background-color: #61e831;
-  border-radius: 50%;
-  box-sizing: content-box;
-}
-
-.ocupado {
-  background-color: #fb3f4a;
-  border-radius: 50%;
-}
-
-.inativo {
-  background-color: #a3a3a3;
-  border-radius: 50%;
-}
 
 .turmas {
   padding: 10px;
@@ -616,11 +552,12 @@ p {
 
 .cardBox {
   background-color: #087285;
-  padding: 20px;
+  padding: 10px;
   border-radius: 10px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-  height: 50vh;
-  margin-top: -1px;
+  height: 45vh;
+  margin-top: 0;
+  margin-bottom: 10px;
 }
 
 .tituloturma {
@@ -664,6 +601,10 @@ select {
   margin-left: 30px;
 }
 
+.select{
+  margin-left: -1px;
+}
+
 .nome {
   margin-left: 15px;
 }
@@ -673,6 +614,10 @@ select {
 
 input[type="time"] {
   margin-left: 8px;
+}
+
+.horario{
+  margin-right: 10px;
 }
 
 button {
@@ -694,11 +639,15 @@ button {
 
 .buttonp {
   text-align: right;
+  margin-top: -12px;
 }
 
 .button1 {
   text-align: right;
   position: right;
+}
+.btn-publicar{
+  margin-left: 900px;
 }
 
 /*=====================EVENTOS===================*/

@@ -15,7 +15,7 @@
                 <router-link class="a-menu" to="/#h4">Eventos</router-link>
                 <router-link class="a-menu" to="/Formulario">Formulário</router-link>
                 <a class="a-menu" href="https://www.instagram.com/academia_aguavida/" target="_blank">Fale Conosco</a>
-                <router-link class="a-menu" to="/login_user"><img src="img/icon_user.png" class="login-user"></router-link>
+                <router-link class="a-menu" to="/login_user"><img src="../assets/img/icon_user.png" class="login-user"></router-link>
             </div>
         </div>
         <hr /> 
