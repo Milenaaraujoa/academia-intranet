@@ -206,7 +206,7 @@
             <summary>Natação</summary>
             <table>
               <tr>
-                <th>Categoria</th>
+                <th>Nome</th>
                 <th>Faixa Etária</th>
                 <th>Horário</th>
               </tr>
@@ -222,7 +222,7 @@
             <summary>Hidroginástica</summary>
             <table>
               <tr>
-                <th>Categoria</th>
+                <th>Nome</th>
                 <th>Faixa Etária</th>
                 <th>Horário</th>
               </tr>
@@ -264,7 +264,7 @@ export default {
                 dia_semana: '',
                 faixa_etaria: ''
             },
-            showModal: false,
+            showModal: true,
             turmas: []
         };
     },

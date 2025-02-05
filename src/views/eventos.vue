@@ -26,8 +26,13 @@
                                 </div>
                                 <label for="importar">Importar Imagem: </label>
                                 <div class="buttonp">
-                                    <button type="button" class='buttonp'>Importar</button>
-                                </div>
+                                <button>
+                                <label for="importar">Importar </label></button></div>
+                                
+                                    <input type="file" id="importar" class="buttonp" @change="handleFileUpload" style="display: none;" />
+                                
+                                    
+                            
                             </div>
                             <div class="buttonp">
                                 

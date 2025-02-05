@@ -176,15 +176,15 @@ export default {
   },
   methods: {
     formatarCpf() {
-      let cpf = this.form.cpf.replace(/\D/g, ""); // Remove tudo o que não é dígito
+      let cpf = String(this.form.cpf).replace(/\D/g, ""); // Converte para string e remove não numéricos
 
-      if (cpf.length <= 11) {
-        cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2"); // Adiciona o primeiro ponto
-        cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2"); // Adiciona o segundo ponto
-        cpf = cpf.replace(/(\d{3})(\d{1,2})$/, "$1-$2"); // Adiciona o hífen
-      }
+  if (cpf.length <= 11) {
+    cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2");
+    cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2");
+    cpf = cpf.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+  }
 
-      this.form.cpf = cpf;
+  this.form.cpf = cpf;
     },
 
     validarPrimeiroDigito(cpf) {
@@ -193,10 +193,7 @@ export default {
         sum += cpf[i] * (10 - i);
       }
       const resto = (sum * 10) % 11;
-      if (resto < 10) {
-        return cpf[9] == resto;
-      }
-      return cpf[9] == 0;
+      return resto < 10 ? cpf[9] == resto : cpf[9] == 0;
     },
 
     validarSegundoDigito(cpf) {
@@ -205,43 +202,51 @@ export default {
         sum += cpf[i] * (11 - i);
       }
       const resto = (sum * 10) % 11;
-      if (resto < 10) {
-        return cpf[10] == resto;
-      }
-      return cpf[10] == 0;
+      return resto < 10 ? cpf[10] == resto : cpf[10] == 0;
     },
 
     validarRepetido(cpf) {
-      const primeiro = cpf[0];
-      let diferente = false;
-      for (let i = 1; i < cpf.length; i++) {
-        if (cpf[i] != primeiro) {
-          diferente = true;
-        }
-      }
-      return diferente;
+      return new Set(cpf).size !== 1;
     },
 
     validarCpf(cpf) {
-      cpf = cpf.replace(/\D/g, "");
-      if (cpf.length != 11) {
-        return false;
-      }
-      if (!this.validarRepetido(cpf)) {
-        return false;
-      }
-      if (!this.validarPrimeiroDigito(cpf)) {
-        return false;
-      }
-      if (!this.validarSegundoDigito(cpf)) {
-        return false;
-      }
-      return true;
+      if (!cpf || typeof cpf !== "string") {
+    return false; // Retorna falso se cpf for undefined ou não for uma string
+  }
+
+  cpf = cpf.replace(/\D/g, ""); // Remove caracteres não numéricos
+
+  if (cpf.length !== 11) {
+    return false;
+  }
+  if (!this.validarRepetido(cpf)) {
+    return false;
+  }
+  if (!this.validarPrimeiroDigito(cpf)) {
+    return false;
+  }
+  if (!this.validarSegundoDigito(cpf)) {
+    return false;
+  }
+  return true;
+},
+
+validarCpfHandler() {
+  let cpf = this.form.cpf; // Obtém CPF do formulário
+
+  if (!cpf) {
+    this.cpfError = true;
+    return;
+  }
+
+  cpf = String(cpf).replace(/\D/g, ""); // Garante que é string e remove caracteres não numéricos
+  this.cpfError = !this.validarCpf(cpf);
     },
 
     validarCpfHandler() {
-      let cpf = this.form.cpf.replace(/\D/g, "").split("").map((e) => parseInt(e));
-      this.cpfError = !this.validarCpf(cpf);
+      let cpf = String(this.form.cpf).replace(/\D/g, ""); // Converte para string
+
+  this.cpfError = !this.validarCpf(cpf);
     },
 
     formatarCep(cep) {
@@ -253,10 +258,8 @@ export default {
       this.cepError = false;
 
       if (cep.length === 8) {
-        cep = this.formatarCep(cep); // Formatar o CEP com pontos
-        const url = `https://viacep.com.br/ws/${cep}/json/`;
-
-        fetch(url)
+        cep = this.formatarCep(cep);
+        fetch(`https://viacep.com.br/ws/${cep}/json/`)
           .then((response) => response.json())
           .then((data) => {
             if (!data.erro) {
@@ -268,7 +271,7 @@ export default {
               this.cepError = true;
             }
           })
-          .catch((_error) => {
+          .catch(() => {
             this.cepError = true;
           });
       } else {
@@ -276,13 +279,55 @@ export default {
       }
     },
 
-    handleSubmit() {
-      // Handle form submission
-      console.log(this.form);
+    async handleSubmit() {
+      if (this.cpfError || this.cepError) {
+        alert("Corrija os erros antes de enviar o formulário.");
+        return;
+      }
+
+      try {
+        const response = await fetch("http://127.0.0.1:8000/api/alunos/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(this.form)
+        });
+
+        if (!response.ok) {
+          throw new Error("Erro ao cadastrar aluno.");
+        }
+
+        alert("Aluno cadastrado com sucesso!");
+        this.resetForm();
+      } catch (error) {
+        alert(error.message);
+      }
+    },
+
+    resetForm() {
+      this.form = {
+        nome: '',
+        cpf: '',
+        datanasc: '',
+        telefone: '',
+        nomeResponsavel: '',
+        cpfResponsavel: '',
+        email: '',
+        cep: '',
+        rua: '',
+        bairro: '',
+        estado: '',
+        cidade: '',
+        casa: '',
+        modalidade: 'Selecione',
+        turma: 'Selecione'
+      };
     }
   }
 };
 </script>
+
 
 <style>
 /*FORMULÁRIO*/
