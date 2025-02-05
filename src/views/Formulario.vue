@@ -176,17 +176,27 @@ export default {
   },
   methods: {
     formatarCpf() {
-      let cpf = String(this.form.cpf).replace(/\D/g, ""); // Converte para string e remove não numéricos
+      let cpf = String(this.form.cpf).replace(/\D/g, ""); // Remove caracteres não numéricos
 
-  if (cpf.length <= 11) {
-    cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2");
-    cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2");
-    cpf = cpf.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
-  }
+      if (cpf.length > 11) {
+        cpf = cpf.substring(0, 11); // Garante que não passe de 11 números
+      }
 
-  this.form.cpf = cpf;
+      if (cpf.length === 11) {
+        cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2");
+        cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2");
+        cpf = cpf.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+      }
+
+      this.form.cpf = cpf;
     },
 
+    // Valida se o CPF tem todos os números repetidos (ex: 111.111.111-11)
+    validarRepetido(cpf) {
+      return new Set(cpf).size !== 1;
+    },
+
+    // Calcula e valida o primeiro dígito verificador do CPF
     validarPrimeiroDigito(cpf) {
       let sum = 0;
       for (let i = 0; i < 9; i++) {
@@ -196,6 +206,7 @@ export default {
       return resto < 10 ? cpf[9] == resto : cpf[9] == 0;
     },
 
+    // Calcula e valida o segundo dígito verificador do CPF
     validarSegundoDigito(cpf) {
       let sum = 0;
       for (let i = 0; i < 10; i++) {
@@ -205,48 +216,40 @@ export default {
       return resto < 10 ? cpf[10] == resto : cpf[10] == 0;
     },
 
-    validarRepetido(cpf) {
-      return new Set(cpf).size !== 1;
-    },
-
+    // Validação completa do CPF
     validarCpf(cpf) {
       if (!cpf || typeof cpf !== "string") {
-    return false; // Retorna falso se cpf for undefined ou não for uma string
-  }
+        return false;
+      }
 
-  cpf = cpf.replace(/\D/g, ""); // Remove caracteres não numéricos
+      cpf = cpf.replace(/\D/g, ""); // Remove caracteres não numéricos
 
-  if (cpf.length !== 11) {
-    return false;
-  }
-  if (!this.validarRepetido(cpf)) {
-    return false;
-  }
-  if (!this.validarPrimeiroDigito(cpf)) {
-    return false;
-  }
-  if (!this.validarSegundoDigito(cpf)) {
-    return false;
-  }
-  return true;
-},
-
-validarCpfHandler() {
-  let cpf = this.form.cpf; // Obtém CPF do formulário
-
-  if (!cpf) {
-    this.cpfError = true;
-    return;
-  }
-
-  cpf = String(cpf).replace(/\D/g, ""); // Garante que é string e remove caracteres não numéricos
-  this.cpfError = !this.validarCpf(cpf);
+      if (cpf.length !== 11) {
+        return false;
+      }
+      if (!this.validarRepetido(cpf)) {
+        return false;
+      }
+      if (!this.validarPrimeiroDigito(cpf)) {
+        return false;
+      }
+      if (!this.validarSegundoDigito(cpf)) {
+        return false;
+      }
+      return true;
     },
 
+    // Chamada da validação ao interagir com o campo
     validarCpfHandler() {
-      let cpf = String(this.form.cpf).replace(/\D/g, ""); // Converte para string
+      let cpf = this.form.cpf;
 
-  this.cpfError = !this.validarCpf(cpf);
+      if (!cpf) {
+        this.cpfError = true;
+        return;
+      }
+
+      cpf = cpf.replace(/\D/g, ""); // Remove caracteres não numéricos
+      this.cpfError = !this.validarCpf(cpf);
     },
 
     formatarCep(cep) {
@@ -279,6 +282,16 @@ validarCpfHandler() {
       }
     },
 
+    // Formatação dos dados antes de enviar para a API
+    formatarData(data) {
+      if (!data) return null;
+      const partes = data.split("/");
+      if (partes.length === 3) {
+        return `${partes[2]}-${partes[1]}-${partes[0]}`; // Converte "DD/MM/YYYY" para "YYYY-MM-DD"
+      }
+      return data;
+    },
+
     async handleSubmit() {
       if (this.cpfError || this.cepError) {
         alert("Corrija os erros antes de enviar o formulário.");
@@ -286,16 +299,24 @@ validarCpfHandler() {
       }
 
       try {
+        // Criação de um objeto temporário com os dados formatados
+        const alunoData = {
+          ...this.form, // Copia os outros campos do formulário
+          cpf_alunos: this.form.cpf.replace(/\D/g, ""), // Remove pontos e traço do CPF
+          data_nascimento: this.formatarData(this.form.datanasc) // Converte a data para "YYYY-MM-DD"
+        };
+
         const response = await fetch("http://127.0.0.1:8000/api/alunos/", {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
           },
-          body: JSON.stringify(this.form)
+          body: JSON.stringify(alunoData)
         });
 
+        const responseData = await response.text(); // Captura a resposta do backend
         if (!response.ok) {
-          throw new Error("Erro ao cadastrar aluno.");
+          throw new Error("Erro ao cadastrar aluno: ");
         }
 
         alert("Aluno cadastrado com sucesso!");
@@ -327,6 +348,7 @@ validarCpfHandler() {
   }
 };
 </script>
+
 
 
 <style>

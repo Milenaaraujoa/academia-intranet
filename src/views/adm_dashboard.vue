@@ -865,6 +865,8 @@ import {
   Legend,
   Tooltip
 } from 'chart.js';
+import axios from "axios";
+import { ref, onMounted } from "vue";
 
 Chart.register(
   PieController,
