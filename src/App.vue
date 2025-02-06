@@ -2,8 +2,10 @@
      <div id="app">
     <Menu v-if="$route.meta.showMenu !== false" />
     <NavBar v-if="$route.meta.showNavbar !== false" :logo="logo_src" />
+    
     <RouterView/>
     <Footer v-if="$route.meta.showFooter !== false" />
+    
   </div>
 </template>
 
@@ -12,13 +14,16 @@ import NavBar from './components/Navbar.vue'
 import Footer from './components/Footer.vue'
 import Menu from './components/Menu.vue'
 import logo from '@/assets/img/logo.png'
+import TabelaTurma from '@/components/TabelaTurma.vue'
+
 
 
 export default {
   components: {
     NavBar,
     Footer,
-    Menu
+    Menu,
+    TabelaTurma,
   },
   data(){
     return{

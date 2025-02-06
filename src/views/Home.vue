@@ -3,21 +3,7 @@
       <h1 id="3">Turmas</h1>
       <div class="turmas">
         <section class="turmas">
-      <details v-for="(grupo, modalidade) in turmasPorModalidade" :key="modalidade">
-        <summary>{{ modalidade }}</summary>
-        <table>
-          <tr>
-            <th>Modalidade</th>
-            <th>Faixa Etária</th>
-            <th>Horário</th>
-          </tr>
-          <tr v-for="turma in grupo" :key="turma.id_turma">
-            <td>{{ turma.modalidade }}</td>
-            <td>{{ turma.faixa_etaria }}</td>
-            <td>{{ turma.dia_semana }} - {{ turma.horario }}</td>
-          </tr>
-        </table>
-      </details>
+          <TabelaTurma/>
     </section>
     </div>
     </section>
@@ -54,7 +40,12 @@
   <script>
   import { ref, computed } from 'vue'; // Certifique-se de importar o ref e computed
   import axios from 'axios';
+  import TabelaTurma from '@/components/TabelaTurma.vue';
+
   export default {
+    components: {
+    TabelaTurma // Registre o componente aqui
+  },
   setup() {
     const slideIndex = ref(0);
     const visibleSlides = ref(3);
@@ -131,9 +122,9 @@
   
   /*turmas*/
   .turmas {
-    width: 80%;
+    width: 90%;
     margin: auto;
-    margin-top: 30px;
+    margin-top: -30px;
   }
   
   section details summary {

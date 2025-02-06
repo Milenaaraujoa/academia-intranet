@@ -58,71 +58,15 @@
               </select>
             </div>
           </div>
-          <div class="buttonp">
-            <button @click="submitForm" class="btn-publicar">Publicar</button>
-          </div>
+          
         </div>
       </form>
+      
     </div>
-
-    <div class="card-tabela">
-      <section class="turmas">
-        <details>
-          <summary>Natação bebê</summary>
-          <table>
-            <tr>
-              <th>Nome</th>
-              <th>Faixa Etária</th>
-              <th>Horário</th>
-            </tr>
-            <tr
-              v-for="turma in filteredTurmas('natacao_bb')"
-              :key="turma.id"
-              @click="editItem(turma)">
-              <td>{{ turma.nome_turma }}</td>
-              <td>{{ turma.faixa_etaria }}</td>
-              <td>{{ turma.horario }} - {{ turma.dia_semana }}</td>
-            </tr>
-          </table>
-        </details>
-        <details>
-          <summary>Natação</summary>
-          <table>
-            <tr>
-              <th>Nome</th>
-              <th>Faixa Etária</th>
-              <th>Horário</th>
-            </tr>
-            <tr
-              v-for="turma in filteredTurmas('natacao')"
-              :key="turma.id"
-              @click="editItem(turma)">
-              <td>{{ turma.nome_turma }}</td>
-              <td>{{ turma.faixa_etaria }}</td>
-              <td>{{ turma.horario }} - {{ turma.dia_semana }}</td>
-            </tr>
-          </table>
-        </details>
-        <details>
-          <summary>Hidroginástica</summary>
-          <table>
-            <tr>
-              <th>Nome</th>
-              <th>Faixa Etária</th>
-              <th>Horário</th>
-            </tr>
-            <tr
-              v-for="turma in filteredTurmas('hidro')"
-              :key="turma.id"
-              @click="editItem(turma)">
-              <td>{{ turma.nome_turma }}</td>
-              <td>{{ turma.faixa_etaria }}</td>
-              <td>{{ turma.horario }} - {{ turma.dia_semana }}</td>
-            </tr>
-          </table>
-        </details>
-      </section>
-    </div>
+    <div class="buttonp">
+            <button type="submit" class="btn-publicar">Publicar</button>
+          </div>
+    <TabelaTurma />
   </div>
 
   <div class="bg2">
@@ -206,8 +150,13 @@
 
 <script>
 import api from "@/services/api";
+import TabelaTurma from "@/components/TabelaTurma.vue";
 
 export default {
+  name: "Turmas",
+  components: {
+    TabelaTurma,
+  },
   data() {
     return {
       form: {
@@ -218,7 +167,7 @@ export default {
         faixa_etaria: "",
       },
       editForm: {
-        id: null,
+        id_turma: null,
         nome_turma: "",
         modalidade: "",
         horario: "",
@@ -226,65 +175,17 @@ export default {
         faixa_etaria: "",
       },
       showModal: false,
-      turmas: [],
     };
   },
-
   methods: {
-    async fetchTurmas() {
-      try {
-        const response = await api.get("api/turmas/");
-        this.turmas = response.data;
-      } catch (error) {
-        console.error("Erro ao buscar turmas:", error);
-      }
-    },
     async submitForm() {
       try {
         await api.post("api/turmas/", this.form);
         alert("Turma adicionada com sucesso!");
-        this.fetchTurmas();
         this.resetForm();
       } catch (error) {
         console.error("Erro ao adicionar turma:", error);
       }
-    },
-    async submitEditForm() {
-      try {
-        if (!this.editForm.id_turma) {
-          console.error("ID da turma não encontrado");
-          return;
-        }
-        console.log("Submitting edit form:", this.editForm);
-        await api.put(`api/turmas/${this.editForm.id_turma}/`, this.editForm);
-        this.fetchTurmas(); // Atualize a lista de turmas
-        this.closeModal();
-      } catch (error) {
-        console.error("Erro ao editar turma:", error);
-      }
-    },
-    async deleteItem(id_turma) {
-      try {
-        if (!id_turma) {
-          console.error("ID da turma não encontrado");
-          return;
-        }
-        console.log("Deleting item with id:", id_turma);
-        await api.delete(`api/turmas/${id_turma}/`);
-        this.fetchTurmas(); // Atualize a lista de turmas
-        this.closeModal();
-      } catch (error) {
-        console.error("Erro ao apagar turma:", error);
-      }
-    },
-    editItem(turma) {
-      console.log("Editing item:", turma);
-      this.editForm = { ...turma };
-      this.showModal = true;
-    },
-    closeModal() {
-      this.showModal = false;
-      this.resetEditForm();
     },
     resetForm() {
       this.form = {
@@ -295,22 +196,502 @@ export default {
         faixa_etaria: "",
       };
     },
-    resetEditForm() {
-      this.editForm = {
-        id: null,
-        nome_turma: "",
-        modalidade: "",
-        horario: "",
-        dia_semana: "",
-        faixa_etaria: "",
-      };
+    editItem(turma) {
+      if (turma) {
+        this.editForm = { ...turma };
+        this.showModal = true;
+      }
     },
-    filteredTurmas(modalidade) {
-      return this.turmas.filter((turma) => turma.modalidade === modalidade);
+    async submitEditForm() {
+      try {
+        await api.put(`api/turmas/${this.editForm.id_turma}/`, this.editForm);
+        alert("Turma atualizada!");
+        this.showModal = false;
+      } catch (error) {
+        console.error("Erro ao atualizar turma:", error);
+      }
     },
-  },
-  mounted() {
-    this.fetchTurmas();
+    async deleteItem(id) {
+      if (confirm("Tem certeza que deseja excluir esta turma?")) {
+        try {
+          await api.delete(`api/turmas/${id}/`);
+          alert("Turma excluída!");
+          this.showModal = false;
+        } catch (error) {
+          console.error("Erro ao excluir turma:", error);
+        }
+      }
+    },
+    closeModal() {
+      this.showModal = false;
+    },
   },
 };
 </script>
+
+<style scoped>
+.main {
+  background-color: #f2eef0;
+  width: calc(100% - 300px);
+  height: calc(100% - 40px);
+  position: absolute;
+  left: 250px;
+  z-index: 1;
+  padding: 20px;
+  top: 20px;
+  border-radius: 30px;
+  overflow: auto;
+}
+
+.cardbox,
+.cardbox2 {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+.card1 {
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0px 0px 5px 1px #00000029;
+  width: 30vw;
+  height: 20vw;
+  flex: 1 1 calc(50% - 40px);
+  max-width: 100%;
+  overflow: auto;
+}
+
+.card2 {
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0px 0px 5px 1px #00000029;
+  width: 10vw;
+  height: 20vw;
+  flex: 1 1 calc(20% - 10px);
+  max-width: 100%;
+  overflow: auto;
+}
+.card3,
+.card4 {
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0px 0px 5px 1px #00000029;
+  width: 27vw;
+  height: 20vw;
+  flex: 1 1 calc(30% - 20px);
+  max-width: 100%;
+  overflow: auto;
+  margin-top: 20px;
+}
+
+@media (max-width: 1024px) {
+  .card1,
+  .card2,
+  .card3,
+  .card4 {
+    width: 45vw;
+    height: 35vw;
+  }
+}
+
+@media (max-width: 768px) {
+  .card1,
+  .card2,
+  .card3,
+  .card4 {
+    width: 90vw;
+    height: 40vw;
+  }
+}
+
+.main {
+  background-color: #f2eef0;
+  width: calc(100% - 300px);
+  height: calc(100% - 40px);
+  position: absolute;
+  left: 250px;
+  z-index: 1;
+  padding: 20px;
+  top: 20px;
+  border-radius: 30px;
+  display: flex;
+  flex-direction: column;
+}
+/*=========== relatorio =============*/
+h1 {
+  font: 2rem "Futura LT Regular", sans-serif;
+  color: #02253b;
+  margin-left: 60px;
+  margin-bottom: 10px;
+}
+hr {
+  width: 100%;
+  height: 1px;
+  border: 0px;
+  border-top: 3px solid #f4af5e;
+}
+.grafics {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  height: 250px;
+}
+.graficos {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+.grafico1,
+.grafico2 {
+  flex: 1;
+  width: 45%;
+  height: 300px;
+}
+
+.grafico1 {
+  margin-left: 70px;
+}
+
+.grafico2 {
+  margin-left: 0;
+  width: 100%;
+  height: auto;
+}
+canvas {
+  max-width: 50%;
+  height: 150px;
+}
+
+section details summary {
+  font: 1.5rem "Futura LT", cursive;
+  color: #087285;
+  background-color: #d9d9d9;
+  padding: 1%;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+table {
+  border-collapse: collapse;
+  align-items: center;
+  width: 90%;
+  margin: 10px auto;
+  background-color: #d9d9d9;
+  margin-top: -10px;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+th {
+  font: 1.1rem "Futura LT", cursive;
+  color: #087285;
+  border-top: 1px solid #60b4c3;
+}
+td {
+  font: 0.9rem "Futura LT";
+  color: #02253b;
+}
+
+th,
+td {
+  padding: 10px;
+  text-align: center;
+  border-bottom: 1px solid #60b4c3;
+  border-right: 1px solid #60b4c3;
+}
+th:last-child,
+td:last-child {
+  border-right: none; /* Remova a borda à direita para a última célula de cada linha */
+}
+
+tr:last-child th,
+tr:last-child td {
+  border-bottom: none; /* Remova a borda inferior para a última linha */
+}
+
+
+.turmas {
+  padding: 10px;
+}
+
+.slide1,
+.slide2 {
+  background-color: #ccc;
+  display: flex;
+  max-width: 100%;
+  margin-bottom: 20px;
+  align-items: center;
+  border-radius: 3%;
+  margin: 10px;
+}
+
+.slide1 img,
+.slide2 img {
+  max-width: 30%;
+  align-items: center;
+  border-radius: 10px;
+  padding-top: 0;
+}
+p {
+  font-family: "Futura LT Regular";
+  color: #087285;
+  font-size: bold;
+}
+
+/* ------------------Turmas----------------- */
+
+.cardBox {
+  background-color: #087285;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  height: 55vh;
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+.tituloturma {
+  margin-top: -10px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.input-row {
+  display: flex;
+  gap: 20px;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+}
+
+label {
+  font: 1rem "Futura LT Regular";
+  color: #ccc;
+  margin: 0;
+}
+
+input,
+select {
+  font: 0.9rem "Futura LT Regular";
+  color: #a3a3a3;
+  border: 1px solid #ccc;
+  border-radius: 7px;
+  padding: 10px;
+  box-sizing: border-box;
+  width: 100%;
+  margin-left: 30px;
+}
+
+.select{
+  margin-left: -1px;
+}
+
+.nome {
+  margin-left: 15px;
+}
+.modalidade {
+  margin-right: -40px;
+}
+
+input[type="time"] {
+  margin-left: 8px;
+}
+
+.horario{
+  margin-right: 10px;
+}
+
+button {
+  background-color: #ff5722;
+  color: white;
+  padding: 9px 9px;
+  width: 100px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font: 0.8rem "Futura LT Regular", sans-serif;
+  margin-right: 50px;
+  height: 32px;
+}
+
+.buttonea {
+  text-align: center;
+}
+
+.buttonp {
+  text-align: right;
+  margin-top: -12px;
+}
+
+.button1 {
+  text-align: right;
+  position: right;
+}
+.btn-publicar{
+  margin-left: 900px;
+}
+
+/*=====================EVENTOS===================*/
+.cardBoxevent {
+  background-color: #087285;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  height: 55vh;
+  margin-top: -1px;
+  flex: 1 1 calc(50% - 40px);
+  margin-right: 20px;
+}
+
+.conteudo {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding-left: 30px;
+  padding-right: 30px;
+}
+.form-group {
+  padding: 15px;
+  justify-items: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.eventoscard {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 50px;
+  gap: 10px;
+  padding-left: 30px;
+  padding-right: 30px;
+}
+
+.evento1,
+.evento2 {
+  background-color: #ccc;
+  display: flex;
+  max-width: 50%;
+  margin-bottom: 20px;
+  align-items: center;
+  border-radius: 3%;
+  margin: 10px;
+  height: 20vh;
+}
+
+.evento1 img,
+.evento2 img {
+  width: 40%;
+  height: 20vh;
+  margin-left: 3px;
+  border-radius: 20%;
+  padding: 10px;
+  object-fit: cover;
+}
+
+/*======================MODAL=======================*/
+
+/* Ajuste o modal para o mesmo tamanho do container */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+
+  background-color: rgba(0, 0, 0, 0.5); /* Fundo preto com opacidade */
+}
+
+/* Definir o conteúdo do modal para ter o mesmo tamanho do container */
+.modal-content {
+  background-color: #60b4c3;
+  align-items: center;
+  border-radius: 4%;
+  border-end-end-radius: 4%;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 100%;
+  max-width: 800px;
+  height: auto;
+  max-height: 80%;
+  overflow-y: auto;
+}
+.formodal {
+  display: flex;
+  gap: 100px;
+  background-color: #02253b;
+  border-radius: 4%;
+  width: 100%;
+  padding: 20px;
+  margin-bottom: 10px;
+}
+
+.formodal input[type="text"],
+input[type="date"],
+input[type="time"] {
+  height: 35px;
+  margin: 5px;
+}
+
+.evento1_modal {
+  background-color: #ccc;
+  text-align: center;
+  align-items: center;
+  max-width: 50%;
+  margin-bottom: 20px;
+  align-items: center;
+  border-radius: 3%;
+  margin: 10px;
+  height: 50vh;
+}
+.evento1_modal img {
+  align-items: center;
+  width: 90%;
+  margin: 0;
+  margin-bottom: 50px;
+  border-radius: 10%;
+}
+/* Estilo para o botão de fechar */
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/*=============================MODAL TURMAS=======================*/
+
+.form-groupmodal {
+  gap: 100px;
+  background-color: #087285;
+  border-radius: 4%;
+  width: 100%;
+  padding: 20px;
+  margin-bottom: 10px;
+}
+.form-groupmodal input[type="text"],
+input[type="date"],
+input[type="time"] {
+  height: 35px;
+  margin: 10px;
+}
+</style>

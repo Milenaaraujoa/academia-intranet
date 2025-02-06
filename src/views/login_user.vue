@@ -26,7 +26,7 @@
             type="password"
             id="password"
             v-model="password"
-            placeholder="***********"
+            placeholder="*******"
             required />
 
           <router-link to="/redef_senha" class="forgot-password"
@@ -70,7 +70,6 @@ export default {
   },
 };
 </script>
-
 <style scoped>
 .top-bar,
 .bottom-bar {

@@ -12,31 +12,31 @@ const routes = [
     path: '/Formulario',
     name: 'Formulario',
     component: () => import('../views/Formulario.vue'),
-    meta: { showMenu: false }
+    meta: { showMenu: false,  showTabelaTurma: false }
   },
   {
     path: '/Modalidade',
     name: 'Modalidade',
     component: () => import('../views/Modalidade.vue'),
-    meta: { showMenu: false }
+    meta: { showMenu: false,  showTabelaTurma: false }
   },
   {
     path: '/login_user',
     name: 'login_user',
     component: () => import('../views/login_user.vue'),
-    meta: { showFooter: false, showNavbar: false, showMenu: false }
+    meta: { showFooter: false, showNavbar: false, showMenu: false,  showTabelaTurma: false }
   },
   {
     path: '/redef_senha',
     name: 'redef_senha',
     component: () => import('../views/redef_senha.vue'),
-    meta: { showFooter: false, showNavbar: false, showMenu: false }
+    meta: { showFooter: false, showNavbar: false, showMenu: false,  showTabelaTurma: false }
   },
   {
     path: '/senha',
     name: 'senha',
     component: () => import('../views/senha.vue'),
-    meta: { showFooter: false, showNavbar: false, showMenu: false }
+    meta: { showFooter: false, showNavbar: false, showMenu: false,  showTabelaTurma: false }
   },
   {
     path: '/adm_dashboard',
@@ -48,19 +48,19 @@ const routes = [
     path: '/relatorio',
     name: 'relatorio',
     component: () => import('../views/relatorio.vue'),
-    meta: { showFooter: false, showNavbar: false }
+    meta: { showFooter: false, showNavbar: false,  showTabelaTurma: false}
   },
   {
     path: '/turmas',
     name: 'turmas',
     component: () => import('../views/turmas.vue'),
-    meta: { showFooter: false, showNavbar: false }
+    meta: { showFooter: false, showNavbar: false,  }
   },
   {
     path: '/eventos',
     name: 'eventos',
     component: () => import('../views/eventos.vue'),
-    meta: { showFooter: false, showNavbar: false}
+    meta: { showFooter: false, showNavbar: false,  showTabelaTurma: false}
   }
 ]
 

@@ -1,213 +1,87 @@
 <template>
-        <div class="main">
-            <h1 class="tituloturma">E V E N T O S</h1>
-            <div class="conteudo">
-                <div class="cardBoxevent">
-                    <form @submit.prevent="submitForm">
-                        <div class="form-group">
-                            <div class="input-group">
-                                <label for="nome">Nome:</label>
-                                <input type="text" class="nome" id="nome" v-model="form.nome" required />
-                            </div>
-                            <div class="input-group">
-                                <label for="tipo">Tipo: </label>
-                                <input type="text" id="tipo" v-model="form.tipo" required />
-                            </div>
-                            <div class="input-group">
-                                <label for="valor">Valor</label>
-                                <input type="number" id="valor" v-model="form.valor" required />
-                            </div>
-                            <div class="input-group bottom-row">
-                                <label for="horario">Data</label>
-                                <input type="date" id="horario" v-model="form.date" required />
-                                <div class="input-group bottom-row">
-                                    <label for="horario">Horário:</label>
-                                    <input type="time" id="horario" v-model="form.horario" required />
-                                </div>
-                                <label for="importar">Importar Imagem: </label>
-                                <div class="buttonp">
-                                <button>
-                                <label for="importar">Importar </label></button></div>
-                                
-                                    <input type="file" id="importar" class="buttonp" @change="handleFileUpload" style="display: none;" />
-                                
-                                    
-                            
-                            </div>
-                            <div class="buttonp">
-                                
-                            </div>
+    <div class="main">
+        <h1 class="tituloturma">E V E N T O S</h1>
+        <div class="conteudo">
+            <div class="cardBoxevent">
+                <form @submit.prevent="submitForm">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <label for="nome">Nome:</label>
+                            <input type="text" class="nome" id="nome" v-model="form.nome_evento" required />
                         </div>
-                    </form>
-                    
-                </div>
-                
-                <div class="card2">
-                    <div class="calendario">
-                        <div class="mes-ano">
-                            S E T E M B R O 2024
+                        <div class="input-group">
+                            <label for="vagas">Vagas:</label>
+                            <input type="number" id="vagas" v-model="form.vagas" required />
                         </div>
-                        <div class="setas">
-                            <span class="ant-mes" @click="changeMonth(-1)">❮</span>
-                            <span class="prox-mex" @click="changeMonth(1)">❯</span>
+                        <div class="input-group">
+                            <label for="valor">Valor</label>
+                            <input type="number" id="valor" step="0.01" v-model="form.valor" required />
                         </div>
-                        <table class="nome-mes">
-                            <thead>
-                                <tr>
-                                    <th>Mo</th>
-                                    <th>Tu</th>
-                                    <th>We</th>
-                                    <th>Th</th>
-                                    <th>Fr</th>
-                                    <th>Sa</th>
-                                    <th>Su</th>
-                                </tr>
-                            </thead>
-                            <tbody class="dias">
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td>1</td>
-                                    <td>2</td>
-                                    <td>3</td>
-                                    <td>4</td>
-                                    <td>5</td>
-                                </tr>
-                                <tr>
-                                    <td>6</td>
-                                    <td>7</td>
-                                    <td>8</td>
-                                    <td class="disponivel">9</td>
-                                    <td>10</td>
-                                    <td class="ocupado">11</td>
-                                    <td>12</td>
-                                </tr>
-                                <tr>
-                                    <td>13</td>
-                                    <td>14</td>
-                                    <td>15</td>
-                                    <td>16</td>
-                                    <td>17</td>
-                                    <td>18</td>
-                                    <td>19</td>
-                                </tr>
-                                <tr>
-                                    <td>20</td>
-                                    <td>21</td>
-                                    <td>22</td>
-                                    <td>23</td>
-                                    <td>24</td>
-                                    <td>25</td>
-                                    <td class="inativo">26</td>
-                                </tr>
-                                <tr>
-                                    <td>27</td>
-                                    <td>28</td>
-                                    <td>29</td>
-                                    <td>30</td>
-                                    <td>31</td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <p class="legenda"> &#128308; Sem vagas &#128994; Dias disponíveis &#x26AB; Dia de eventos</p>
+                        <div class="input-group">
+                            <label for="data_evento">Data</label>
+                            <input type="date" id="data_evento" v-model="form.data_evento" required />
+                        </div>
+                        <div class="input-group">
+                            <label for="importar">Importar Imagem: </label>
+                            <button type="button" @click="triggerFileInput">
+                                <label for="importar">Importar</label>
+                            </button>
+                            <input type="file" id="importar" ref="fileInput" @change="handleFileUpload" style="display: none;" />
+                        </div>
                     </div>
-                </div>
-            </div>
-            <button type="submit" class="btn-publicar">Publicar</button>
-            <div class="eventoscard">
-                <div class="evento1">
-                    <img src="../assets/img/arraia.jpg" alt="Arraiá Tradicional">
-                    <p>Texto com informações gerais</p>
-                </div>
-                <div class="evento2">
-                    <img src="../assets/img/pascoa.jpg" alt="Carnaval Animado">
-                    <p>Texto com informações gerais</p>
-                </div>
-            </div>
-            <div class="buttonea">
-                <button @click="editEvent">Editar</button>
-                <button @click="deleteEvent">Apagar</button>
+                    <button type="submit" class="btn-publicar">Publicar</button>
+                </form>
             </div>
         </div>
-        <div class="bg2">
-            <img src="/adm_dashboard/img/backazule.png" alt="" />
-        </div>
-        <div id="modal" class="modal" v-if="showModal">
-            <div class="modal-content">
-                <span class="close" @click="closeModal">&times;</span>
-                <div class="formodal">
-                    <form class="form-group-evento">
-                        <label for="nome">Nome:</label>
-                        <input type="text" id="edit-nome" v-model="editForm.nome" />
-
-                        <label for="tipo">Tipo:</label>
-                        <input type="text" id="edit-tipo" v-model="editForm.tipo" />
-
-                        <label for="horario">Horário:</label>
-                        <input type="time" id="edit-horario" v-model="editForm.horario" />
-
-                        <label for="valor">Valor:</label>
-                        <input type="text" id="edit-valor" v-model="editForm.valor" />
-
-                        <label for="data">Data:</label>
-                        <input type="date" id="edit-data" v-model="editForm.data" />
-                        <label for="importar">Importar Imagem: </label>
-
-                        <div class="buttonp">
-                            <button type="button">Importar</button>
-                        </div>
-                    </form>
-                    <div class="evento1_modal">
-                        <img src="img/arraia.jpg" alt="Arraiá Tradicional">
-                        <p>Texto com informações gerais</p>
-                    </div>
-                </div>
-                <div class="buttonea">
-                    <button @click="editEvent">Editar</button>
-                    <button @click="deleteEvent">Apagar</button>
-                </div>
-            </div>
-        </div>
+    </div>
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
     data() {
         return {
             form: {
-                nome: '',
-                tipo: '',
+                nome_evento: '',
+                vagas: '',
+                data_evento: '',
                 valor: '',
-                date: '',
-                horario: ''
-            },
-            editForm: {
-                nome: '',
-                tipo: '',
-                valor: '',
-                data: '',
-                horario: ''
-            },
-            showModal: false
+                imagem: null
+            }
         };
     },
     methods: {
-        submitForm() {
-            // Handle form submission
+        async submitForm() {
+            try {
+                let formData = new FormData();
+                formData.append('nome_evento', this.form.nome_evento);
+                formData.append('vagas', this.form.vagas);
+                formData.append('data_evento', this.form.data_evento);
+                formData.append('valor', this.form.valor);
+                if (this.form.imagem) {
+                    formData.append('imagem', this.form.imagem);
+                }
+
+                const response = await axios.post('http://127.0.0.1:8000/api/eventos/', formData, {
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                });
+
+                alert('Evento cadastrado com sucesso!');
+                console.log(response.data);
+
+                // Resetar formulário após o envio
+                this.form = { nome_evento: '', vagas: '', data_evento: '', valor: '', imagem: null };
+            } catch (error) {
+                console.error('Erro ao cadastrar evento:', error);
+                alert('Erro ao cadastrar evento.');
+            }
         },
-        changeMonth(direction) {
-            // Handle month change
+        handleFileUpload(event) {
+            this.form.imagem = event.target.files[0];
         },
-        editEvent() {
-            this.showModal = true;
-        },
-        deleteEvent() {
-            // Handle event delete
-        },
-        closeModal() {
-            this.showModal = false;
+        triggerFileInput() {
+            this.$refs.fileInput.click();
         }
     }
 };
@@ -496,7 +370,7 @@ button {
 .btn-publicar{
     position: right;
     align-items: right;
-    margin-left: 500px;
+    margin-left: 800px;
     padding: 5px;
 }
 
@@ -507,9 +381,10 @@ button {
     padding: 0;
     border-radius: 10px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    height: 40vh;
+    height: 54vh;
     margin-top: -1px;
     flex: 1 1 calc(50% - 40px);
+    margin-bottom: 20px;
 }
 
 .conteudo{

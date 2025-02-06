@@ -1,148 +1,125 @@
 <template>
-        <div class="main">
-            <div class="maincontainer">
-                <div class="card">
-                    <div class="title">
-                        <h1>R E L A T Ó R I O</h1>
-                    </div>
-                    <hr />
-                    <div class="content">
-                        <div class="graficos">
-                            <div class="grafico1">
-                                <canvas class="line-chart"></canvas>
-                            </div>
-                            <div class="grafico2">
-                                <canvas class="line-chart2"></canvas>
-                            </div>
-                        </div>
-                        <section class="relatorio">
-                            <details>
-                                <summary>Experimental</summary>
-                                <table>
-                                    <tr>
-                                        <th>Nome</th>
-                                        <th>Email</th>
-                                        <th>Telefone</th>
-                                        <th>Turma & Horário</th>
-                                    </tr>
-                                    <tr>
-                                        <td>Aluno</td>
-                                        <td>nome@exemplo.com</td>
-                                        <td>(xx) xxxxx-xxxx</td>
-                                        <td>Natação Bebê - 3° e 5°F(00:00)</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Aluno</td>
-                                        <td>nome@exemplo.com</td>
-                                        <td>(xx) xxxxx-xxxx</td>
-                                        <td>Natação Bebê - 3° e 5°F(00:00)</td>
-                                    </tr>
-                                </table>
-                            </details>
-                            <details>
-                                <summary>Reposição</summary>
-                                <table>
-                                    <tr>
-                                        <th>Nome</th>
-                                        <th>Email</th>
-                                        <th>Telefone</th>
-                                        <th>Turma & Horário</th>
-                                    </tr>
-                                    <tr>
-                                        <td>Aluno</td>
-                                        <td>nome@exemplo.com</td>
-                                        <td>(xx) xxxxx-xxxx</td>
-                                        <td>Natação Bebê - 3° e 5°F(00:00)</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Aluno</td>
-                                        <td>nome@exemplo.com</td>
-                                        <td>(xx) xxxxx-xxxx</td>
-                                        <td>Natação Bebê - 3° e 5°F(00:00)</td>
-                                    </tr>
-                                </table>
-                            </details>
-                            <details>
-                                <summary>Eventos</summary>
-                                <table>
-                                    <tr>
-                                        <th>Nome</th>
-                                        <th>Email</th>
-                                        <th>Telefone</th>
-                                        <th>Turma & Horário</th>
-                                    </tr>
-                                    <tr>
-                                        <td>Aluno</td>
-                                        <td>nome@exemplo.com</td>
-                                        <td>(xx) xxxxx-xxxx</td>
-                                        <td>Natação Bebê - 3° e 5°F(00:00)</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Aluno</td>
-                                        <td>nome@exemplo.com</td>
-                                        <td>(xx) xxxxx-xxxx</td>
-                                        <td>Natação Bebê - 3° e 5°F(00:00)</td>
-                                    </tr>
-                                </table>
-                            </details>
-                        </section>
-                    </div>
-                </div>
+    <div class="main">
+      <div class="maincontainer">
+        <div class="card">
+          <div class="title">
+            <h1>R E L A T Ó R I O</h1>
+          </div>
+          <hr />
+          <div class="content">
+            <div class="graficos">
+              <div class="grafico1">
+                <canvas ref="chartPie"></canvas>
+              </div>
+              <div class="grafico2">
+                <canvas ref="chartBar"></canvas>
+              </div>
             </div>
+            <section class="relatorio">
+              <details v-for="(modalidade, index) in modalidades" :key="index">
+                <summary>{{ modalidade }}</summary>
+                <table>
+                  <tr>
+                    <th>Nome</th>
+                    <th>Email</th>
+                    <th>Telefone</th>
+                    <th>Turma & Horário</th>
+                  </tr>
+                  <tr v-for="(aluno, idx) in alunosFiltrados(modalidade)" :key="idx">
+                    <td>{{ aluno.nome }}</td>
+                    <td>{{ aluno.email }}</td>
+                    <td>{{ aluno.telefone }}</td>
+                    <td>{{ aluno.modalidade }} - {{ aluno.horario }}</td>
+                  </tr>
+                </table>
+              </details>
+            </section>
+          </div>
         </div>
-</template>
-
-<script>
-import { onMounted } from 'vue';
-import Chart from 'chart.js/auto';
-import Background from '@/components/Background.vue';
-
-export default {
-    name: 'Relatorio',
+      </div>
+    </div>
+  </template>
+  
+  <script>
+  import api from "@/services/api";
+  import { ref, onMounted } from "vue";
+  import Chart from "chart.js/auto";
+  
+  export default {
+    name: "Relatorio",
     setup() {
-        onMounted(() => {
-            var ctx = document.getElementsByClassName('line-chart')[0].getContext('2d');
-            var ctc = document.getElementsByClassName('line-chart2')[0].getContext('2d');
-
-            new Chart(ctx, {
-                type: 'pie',
-                data: {
-                    labels: ['Natação', 'Natação Bebê', 'Hidroginástica', 'Evento'],
-                    datasets: [{
-                        label: 'Atividades',
-                        backgroundColor: ['rgb(0, 0, 255)', 'rgb(220, 0, 0)', 'rgb(255, 140, 0)', 'rgb(255, 220, 0)'],
-                        borderColor: 'rgb(255, 255, 255)',
-                        data: [10, 20, 30, 40]
-                    }]
-                },
-                options: {
-                    plugins: {
-                        legend: {
-                            display: true,
-                            position: 'top',
-                            align: 'start'
-                        }
-                    }
-                }
-            });
-
-            new Chart(ctc, {
-                type: 'bar',
-                data: {
-                    labels: ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'],
-                    datasets: [{
-                        label: 'Pré-agendamento',
-                        backgroundColor: 'rgb(54, 162, 235)',
-                        borderColor: 'rgb(54, 162, 235)',
-                        data: [0, 50, 100, 150, 200]
-                    }]
-                },
-                options: {}
-            });
+      const modalidades = ref([]);
+      const alunos = ref([]);
+      const chartPie = ref(null);
+      const chartBar = ref(null);
+  
+      const fetchAlunos = async () => {
+        try {
+          const response = await api.get("api/alunos/");
+          alunos.value = response.data;
+  
+          // Extrai modalidades únicas
+          modalidades.value = [...new Set(response.data.map(aluno => aluno.modalidade))];
+  
+          // Atualiza os gráficos com os novos dados
+          renderCharts();
+        } catch (error) {
+          console.error("Erro ao buscar alunos: ", error);
+        }
+      };
+  
+      const alunosFiltrados = (modalidade) => {
+        return alunos.value.filter(aluno => aluno.modalidade === modalidade);
+      };
+  
+      const renderCharts = () => {
+        if (!chartPie.value || !chartBar.value) return;
+  
+        const ctxPie = chartPie.value.getContext("2d");
+        const ctxBar = chartBar.value.getContext("2d");
+  
+        // Dados para os gráficos
+        const modalidadesLabels = modalidades.value;
+        const modalidadesData = modalidadesLabels.map(modalidade =>
+          alunosFiltrados(modalidade).length
+        );
+  
+        // Gráfico de pizza
+        new Chart(ctxPie, {
+          type: "pie",
+          data: {
+            labels: modalidadesLabels,
+            datasets: [{
+              label: "Distribuição de Alunos por Modalidade",
+              data: modalidadesData,
+              backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0"],
+            }],
+          },
+          options: { responsive: true }
         });
-    }
-};
-</script>
+  
+        // Gráfico de barras
+        new Chart(ctxBar, {
+          type: "bar",
+          data: {
+            labels: modalidadesLabels,
+            datasets: [{
+              label: "Quantidade de Alunos por Modalidade",
+              data: modalidadesData,
+              backgroundColor: "#36A2EB",
+            }],
+          },
+          options: { responsive: true }
+        });
+      };
+  
+      onMounted(fetchAlunos);
+  
+      return { modalidades, alunosFiltrados, chartPie, chartBar };
+    },
+  };
+  </script>
+  
 
 <style scoped>
 
@@ -276,7 +253,7 @@ hr{
 }
 canvas {
     max-width: 50%;
-    height: 150px;
+    height: 96px;
   }
 
 section details summary {

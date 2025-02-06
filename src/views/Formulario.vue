@@ -316,7 +316,7 @@ export default {
 
         const responseData = await response.text(); // Captura a resposta do backend
         if (!response.ok) {
-          throw new Error("Erro ao cadastrar aluno: ");
+          throw new Error("Erro ao cadastrar aluno: " + responseData);
         }
 
         alert("Aluno cadastrado com sucesso!");

@@ -6,18 +6,15 @@
           <div class="title"><h1>R E L A T Ó R I O</h1></div>
           <hr />
           <div class="content">
-            <section class="relatorio">
-              <div class="grafics">
+            <div class="graficos">
               <div class="grafico1">
-             <canvas class="line-chart">
-             </canvas>
+                <canvas ref="chartPie"></canvas>
+              </div>
+              <div class="grafico2">
+                <canvas ref="chartBar"></canvas>
+              </div>
             </div>
-             <div class="grafico2">
-             <canvas class="line-chart2">
-            </canvas>
-          </div>
-        </div>
-            </section>
+            
           </div>
         </div>
       </div>
@@ -101,62 +98,9 @@
       <div class="cardbox2">
       <div class="card3">
         <h1 id="3">T U R M A S</h1>
-        <section class="turmas">
-            <details>
-            <summary>Natação bebê</summary>
-            <table>
-                <tr>
-                  <th>Nome</th>
-                  <th>Faixa Etária</th>
-                  <th>Vagas</th>
-                  <th>Horário</th>
-                </tr>
-                <tr>
-                <td>Natação para Bebê</td>
-                <td>6 meses a 2 anos - acompanhado</td>
-                <td>0</td>
-                <td>T &amp; Q - 11h</td>
-            </tr>
-              </table>
-        </details>
-        <details>
-            <summary>Natação</summary>
-            <table>
-                <tr>
-                  <th>Categoria</th>
-                  <th>Faixa Etária</th>
-                  <th>Vagas</th>
-                  <th>Horário</th>
-                </tr>
-                <tr>
-                <td>Adaptação I &amp; II</td>
-                <td>Adulto &amp; Infantil</td>
-                <td>0</td>
-                <td>Segunda à sábado Diurno</td>
-            </tr>
-              </table>
-        </details>
-        <details>
-            <summary>Hidroginástica</summary>
-            <table>
-                <tr>
-                  <th>Categoria</th>
-                  <th>Faixa Etária</th>
-                  <th>Vagas</th>
-                  <th>Horário</th>
-                  
-                </tr>
-                <tr>
-                <td>Hidroginástica</td>
-                <td>Terceira idade</td>
-                <td>0</td>
-                <td>Segunda à sábado Diurno</td>
-            </tr>
-              </table>
-              
-            </details>
-            </section>
-        
+      
+      <TabelaTurma />
+
       <router-link to="/turmas">
         <button class="button_1">Editar</button>
       </router-link>
@@ -177,7 +121,7 @@
       </router-link>
           </div>
       </div> 
-      </div>
+    </div>
 </template>
 
 <style>
@@ -385,6 +329,9 @@ img{
     overflow: auto;
     margin-top: 20px;
 }
+.tabela_turma{
+  padding: 20px;
+}
 
 @media (max-width: 1024px) {
     .card1, .card2, .card3, .card4 {
@@ -457,7 +404,7 @@ hr{
 }
 canvas {
     max-width: 50%;
-    height: 150px;
+    height: 100px;
   }
 
 section details summary {
@@ -865,9 +812,11 @@ import {
   Legend,
   Tooltip
 } from 'chart.js';
-import axios from "axios";
 import { ref, onMounted } from "vue";
+import TabelaTurma from '@/components/TabelaTurma.vue';
+import api from '@/services/api'; // Certifique-se de importar a API corretamente
 
+// Registrar os componentes do Chart.js
 Chart.register(
   PieController,
   BarController,
@@ -879,85 +828,77 @@ Chart.register(
   Tooltip
 );
 
-
 export default {
-  mounted() {
-    // Configuração da navegação
-    let list = document.querySelectorAll(".navigation li");
+  name: "GraficoTurma",
+  components: {
+    TabelaTurma,
+  },
+  setup() {
+    const modalidades = ref([]);
+    const alunos = ref([]);
+    const chartPie = ref(null);
+    const chartBar = ref(null);
+    let pieChartInstance = null;
+    let barChartInstance = null;
 
-    function activeLink() {
-      list.forEach(item => {
-        item.classList.remove("hovered");
+    const fetchAlunos = async () => {
+      try {
+        const response = await api.get("api/alunos/");
+        alunos.value = response.data;
+        modalidades.value = [...new Set(response.data.map(aluno => aluno.modalidade))];
+        renderCharts();
+      } catch (error) {
+        console.error("Erro ao buscar alunos: ", error);
+      }
+    };
+
+    const alunosFiltrados = (modalidade) => {
+      return alunos.value.filter(aluno => aluno.modalidade === modalidade);
+    };
+
+    const renderCharts = () => {
+      if (!chartPie.value || !chartBar.value) return;
+
+      const ctxPie = chartPie.value.getContext("2d");
+      const ctxBar = chartBar.value.getContext("2d");
+
+      const modalidadesLabels = modalidades.value;
+      const modalidadesData = modalidadesLabels.map(modalidade => alunosFiltrados(modalidade).length);
+
+      // Destruir gráficos antigos antes de recriar
+      if (pieChartInstance) pieChartInstance.destroy();
+      if (barChartInstance) barChartInstance.destroy();
+
+      pieChartInstance = new Chart(ctxPie, {
+        type: "pie",
+        data: {
+          labels: modalidadesLabels,
+          datasets: [{
+            label: "Distribuição de Alunos por Modalidade",
+            data: modalidadesData,
+            backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0"],
+          }],
+        },
+        options: { responsive: true }
       });
-      this.classList.add("hovered");
-    }
 
-    list.forEach(item => item.addEventListener("mouseover", activeLink));
-    list.forEach(item => item.addEventListener("click", activeLink));
+      barChartInstance = new Chart(ctxBar, {
+        type: "bar",
+        data: {
+          labels: modalidadesLabels,
+          datasets: [{
+            label: "Quantidade de Alunos por Modalidade",
+            data: modalidadesData,
+            backgroundColor: "#36A2EB",
+          }],
+        },
+        options: { responsive: true }
+      });
+    };
 
-    // Gráfico 1
-    var ctx = document.getElementsByClassName('line-chart')[0].getContext('2d');
-    var chartGraph = new Chart(ctx, {
-      type: 'pie',
-      data: {
-        labels: ['Natação', 'Natação Bebê', 'Hidroginástica', 'Evento'],
-        datasets: [{
-          label: 'Atividades',
-          backgroundColor: ['rgb(0, 0, 255)', 'rgb(220, 0, 0)', 'rgb(255, 140, 0)', 'rgb(255, 220, 0)'],
-          borderColor: 'rgb(255, 255, 255)',
-          data: [10, 20, 30, 40]
-        }]
-      },
-      options: {
-        plugins: {
-          legend: {
-            display: true,
-            position: 'bottom',
-            align: 'start',
-            labels: {
-              boxWidth: 10,
-              padding: 10,
-              usePointStyle: true,
-              pointStyle: 'rectRounded'
-            }
-          }
-        }
-      }
-    });
+    onMounted(fetchAlunos);
 
-    // Gráfico 2
-    var ctc = document.getElementsByClassName('line-chart2')[0].getContext('2d');
-    var chartGraph2 = new Chart(ctc, {
-      type: 'bar',
-      data: {
-        labels: ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'],
-        datasets: [{
-          label: 'Pré-cadastro',
-          backgroundColor: 'rgb(54, 162, 235)',
-          borderColor: 'rgb(54, 162, 235)',
-          data: [0, 50, 100, 150, 200]
-        }]
-      },
-      options: {
-        scales: {
-          x: {
-            ticks: {
-              font: {
-                size: 10
-              }
-            }
-          },
-          y: {
-            ticks: {
-              font: {
-                size: 10
-              }
-            }
-          }
-        }
-      }
-    });
-  }
+    return { modalidades, alunosFiltrados, chartPie, chartBar };
+  },
 };
-
 </script>
