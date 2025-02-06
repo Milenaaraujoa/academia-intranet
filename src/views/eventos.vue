@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+import api from "@/services/api";
 
 export default {
     data() {
@@ -53,36 +53,54 @@ export default {
     },
     methods: {
         async submitForm() {
-            try {
-                let formData = new FormData();
-                formData.append('nome_evento', this.form.nome_evento);
-                formData.append('vagas', this.form.vagas);
-                formData.append('data_evento', this.form.data_evento);
-                formData.append('valor', this.form.valor);
-                if (this.form.imagem) {
-                    formData.append('imagem', this.form.imagem);
-                }
-
-                const response = await axios.post('http://127.0.0.1:8000/api/eventos/', formData, {
-                    headers: { 'Content-Type': 'multipart/form-data' }
-                });
-
-                alert('Evento cadastrado com sucesso!');
-                console.log(response.data);
-
-                // Resetar formulário após o envio
-                this.form = { nome_evento: '', vagas: '', data_evento: '', valor: '', imagem: null };
-            } catch (error) {
-                console.error('Erro ao cadastrar evento:', error);
-                alert('Erro ao cadastrar evento.');
-            }
-        },
-        handleFileUpload(event) {
-            this.form.imagem = event.target.files[0];
-        },
-        triggerFileInput() {
-            this.$refs.fileInput.click();
+      try {
+        await api.post("api/eventos/", this.form);
+        alert("Evento adicionado com sucesso!");
+        this.resetForm();
+      } catch (error) {
+        console.error("Erro ao adicionar evento:", error);
+      }
+    },
+    esetForm() {
+      this.form = {
+        nome_evento: "",
+        vagas: "",
+        data_evento: "",
+        valor: "",
+        imagem: null
+      };
+    },
+    editItem(evento) {
+      if (evento) {
+        this.editForm = { ...evento };
+        this.showModal = true;
+      }
+    },
+    async submitEditForm() {
+      try {
+        const eventoData = { ...this.form };
+        delete eventoData.id_evento; // Remove o ID antes de enviar
+         await api.post("api/eventos/", eventoData);
+        alert("Evento adicionado com sucesso!");
+         this.resetForm();
+      } catch (error) {
+        console.error("Erro ao atualizar evento:", error);
+      }
+    },
+    async deleteItem(id) {
+      if (confirm("Tem certeza que deseja excluir este evento?")) {
+        try {
+          await api.delete(`api/eventos/${id}/`);
+          alert("Evento excluído!");
+          this.showModal = false;
+        } catch (error) {
+          console.error("Erro ao excluir evento:", error);
         }
+      }
+    },
+    closeModal() {
+      this.showModal = false;
+    },
     }
 };
 </script>
