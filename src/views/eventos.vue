@@ -7,7 +7,7 @@
                     <div class="form-group">
                         <div class="input-group">
                             <label for="nome">Nome:</label>
-                            <input type="text" class="nome" id="nome" v-model="form.nome_evento" required />
+                            <input type="text" id="nome" v-model="form.nome_evento" required />
                         </div>
                         <div class="input-group">
                             <label for="vagas">Vagas:</label>
@@ -21,92 +21,177 @@
                             <label for="data_evento">Data</label>
                             <input type="date" id="data_evento" v-model="form.data_evento" required />
                         </div>
-                        <div class="input-group">
-                            <label for="importar">Importar Imagem: </label>
-                            <button type="button" @click="triggerFileInput">
-                                <label for="importar">Importar</label>
-                            </button>
-                            <input type="file" id="importar" ref="fileInput" @change="handleFileUpload" style="display: none;" />
-                        </div>
                     </div>
                     <button type="submit" class="btn-publicar">Publicar</button>
                 </form>
             </div>
         </div>
+        
+        <div class="eventoscard">
+            <div v-for="evento in eventos" :key="evento.id" class="evento">
+                <img src="../assets/img/arraia.jpg" alt="Evento">
+                <div class="evento-info">
+                    <h3>{{ evento.nome_evento }}</h3>
+                    <p class="exibir">Vagas: {{ evento.vagas }}</p>
+                    <p class="exibir">Valor: R$ {{ evento.valor }}</p>
+                    <p class="exibir">Data: {{ evento.data_evento }}</p>
+                    <button @click="abrirModal(evento)">Editar</button>
+                </div>
+            </div>
+        </div>
+        <div id="modal" class="modal" v-if="showModal">
+    <div class="modal-content">
+      <span class="close" @click="closeModal">&times;</span>
+      <form @submit.prevent="submitEditForm">
+  <div class="form-groupmodal">
+    <div class="input-group">
+      <label for="nome">Nome:</label>
+      <input type="text" id="nome" v-model="editForm.nome_evento" required />
     </div>
+    <div class="input-group">
+      <label for="vagas">Vagas:</label>
+      <input type="number" id="vagas" v-model="editForm.vagas" required />
+    </div>
+    <div class="input-group">
+      <label for="valor">Valor:</label>
+      <input type="number" id="valor" step="0.01" v-model="editForm.valor" required />
+    </div>
+    <div class="input-group">
+      <label for="data_evento">Data:</label>
+      <input type="date" id="data_evento" v-model="editForm.data_evento" required />
+    </div>
+    <div class="buttonea">
+      <button type="submit">Salvar</button>
+      <button @click="deleteItem(editForm.id_evento)">Excluir</button>
+    </div>
+  </div>
+</form>
+    </div>
+</div>
+</div>
 </template>
 
 <script>
 import api from "@/services/api";
 
 export default {
-    data() {
-        return {
-            form: {
-                nome_evento: '',
-                vagas: '',
-                data_evento: '',
-                valor: '',
-                imagem: null
-            }
-        };
+  data() {
+    return {
+      form: {
+        nome_evento: "",
+        data: "",
+        horario: ""
+      },
+      editForm: {
+        id_evento: null,
+        nome_evento: "",
+        data: "",
+        horario: ""
+      },
+      showModal: false,
+      eventos: []
+    };
+  },
+  methods: {
+    abrirModal(evento) {
+        this.editForm = { 
+    id_evento: evento.id_evento,
+    nome_evento: evento.nome_evento,
+    vagas: evento.vagas,
+    valor: evento.valor,
+    data_evento: evento.data_evento
+  }; // Preenche editForm com os dados do evento
+    this.showModal = true;
+  },
+    async fetchEventos() {
+      try {
+        const response = await api.get("api/eventos/");
+        this.eventos = response.data;
+      } catch (error) {
+        console.error("Erro ao buscar eventos:", error);
+      }
     },
-    methods: {
-        async submitForm() {
+    async submitForm() {
       try {
         await api.post("api/eventos/", this.form);
         alert("Evento adicionado com sucesso!");
+        this.fetchEventos();
         this.resetForm();
       } catch (error) {
         console.error("Erro ao adicionar evento:", error);
       }
     },
-    esetForm() {
-      this.form = {
-        nome_evento: "",
-        vagas: "",
-        data_evento: "",
-        valor: "",
-        imagem: null
-      };
-    },
-    editItem(evento) {
-      if (evento) {
-        this.editForm = { ...evento };
-        this.showModal = true;
-      }
-    },
     async submitEditForm() {
       try {
-        const eventoData = { ...this.form };
-        delete eventoData.id_evento; // Remove o ID antes de enviar
-         await api.post("api/eventos/", eventoData);
-        alert("Evento adicionado com sucesso!");
-         this.resetForm();
+        await api.put(`api/eventos/${this.editForm.id_evento}/`, this.editForm);
+        alert("Evento editado com sucesso!");
+        this.fetchEventos();
+        this.closeModal();
       } catch (error) {
-        console.error("Erro ao atualizar evento:", error);
+        console.error("Erro ao editar evento:", error);
       }
     },
-    async deleteItem(id) {
-      if (confirm("Tem certeza que deseja excluir este evento?")) {
-        try {
-          await api.delete(`api/eventos/${id}/`);
-          alert("Evento excluído!");
-          this.showModal = false;
-        } catch (error) {
-          console.error("Erro ao excluir evento:", error);
+    async deleteItem(id_evento) {
+      try {
+        if (confirm("Tem certeza que deseja excluir este evento?")) {
+          await api.delete(`api/eventos/${id_evento}/`);
+          alert("Evento excluído com sucesso!");
+          this.fetchEventos();
+          this.closeModal();
         }
+      } catch (error) {
+        console.error("Erro ao excluir evento:", error);
       }
+    },
+    editItem(evento) {
+      this.editForm = { ...evento };
+      this.showModal = true;
     },
     closeModal() {
       this.showModal = false;
+      this.resetEditForm();
     },
+    resetForm() {
+      this.form = { nome_evento: "", data: "", horario: "" };
+    },
+    resetEditForm() {
+      this.editForm = { id_evento: null, nome_evento: "", data: "", horario: "" };
     }
+  },
+  mounted() {
+    this.fetchEventos();
+  }
 };
 </script>
 
-<style scoped>
 
+<style scoped>
+.eventoscard {
+    display: flex;
+    flex-wrap: wrap;
+    gap: -1px;
+    margin-top: 20px;
+    padding-top: 10px;
+}
+.evento {
+    background-color: #087285;
+    border-radius: 10px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    width: 250px;
+    text-align: center;
+}
+.evento img {
+    width: 90%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin: auto;
+    margin-top: -20px;
+}
+.evento-info {
+    margin-top: 10px;
+}
 .container{
     position: relative;
     width: 100%;
@@ -125,7 +210,15 @@ export default {
     overflow: auto;
     
 }
+h3{
+    font: 1rem "Futura LT Regular",sans-serif;
+    color:#02253B;
+}
+.exibir{
+    font: 0.8rem "Futura LT Regular",sans-serif;
+    color:#ffff
 
+}
 .cardbox, .cardbox2 {
     display: flex;
     justify-content: space-between;
@@ -367,7 +460,7 @@ button {
     border-radius: 4px;
     cursor: pointer;
     font: 1rem "Futura LT Regular", sans-serif;
-    margin-right: 50px;
+    margin-left: 50px;
     height: 32px;
 
 }
@@ -476,7 +569,6 @@ button {
   padding: 20px;
   border: 1px solid #888;
   width: 100%;
-  max-width: 800px;
   height: auto;
   max-height: 80%;
   overflow-y: auto;

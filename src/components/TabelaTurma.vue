@@ -1,63 +1,60 @@
 <template>
-    <div class="card-tabela">
-      <section class="turmas">
-        <details>
-          <summary>Natação bebê</summary>
-          <table>
-            <tr>
-              <th>Nome</th>
-              <th>Faixa Etária</th>
-              <th>Horário</th>
-            </tr>
-            <tr
-              v-for="turma in filteredTurmas('natacao_bb')"
-              :key="turma.id"
-              @click="editItem(turma)">
-              <td>{{ turma.nome_turma }}</td>
-              <td>{{ turma.faixa_etaria }}</td>
-              <td>{{ turma.horario }} - {{ turma.dia_semana }}</td>
-            </tr>
-          </table>
-        </details>
-        <details>
-          <summary>Natação</summary>
-          <table>
-            <tr>
-              <th>Nome</th>
-              <th>Faixa Etária</th>
-              <th>Horário</th>
-            </tr>
-            <tr
-              v-for="turma in filteredTurmas('natacao')"
-              :key="turma.id"
-              @click="editItem(turma)">
-              <td>{{ turma.nome_turma }}</td>
-              <td>{{ turma.faixa_etaria }}</td>
-              <td>{{ turma.horario }} - {{ turma.dia_semana }}</td>
-            </tr>
-          </table>
-        </details>
-        <details>
-          <summary>Hidroginástica</summary>
-          <table>
-            <tr>
-              <th>Nome</th>
-              <th>Faixa Etária</th>
-              <th>Horário</th>
-            </tr>
-            <tr
-              v-for="turma in filteredTurmas('hidro')"
-              :key="turma.id"
-              @click="editItem(turma)">
-              <td>{{ turma.nome_turma }}</td>
-              <td>{{ turma.faixa_etaria }}</td>
-              <td>{{ turma.horario }} - {{ turma.dia_semana }}</td>
-            </tr>
-          </table>
-        </details>
-      </section>
-      <button @click="$emit('editarTurma', turma)">Editar</button>
-    </div>
+  <div class="card-tabela">
+    <section class="turmas">
+      <details>
+        <summary>Natação bebê</summary>
+        <table>
+          <tr>
+            <th>Nome</th>
+            <th>Faixa Etária</th>
+            <th>Horário</th>
+            <th>Ações</th>
+          </tr>
+          <tr v-for="turma in filteredTurmas('natacao_bb')" :key="turma.id">
+            <td>{{ turma.nome_turma }}</td>
+            <td>{{ turma.faixa_etaria }}</td>
+            <td>{{ turma.horario }} - {{ turma.dia_semana }}</td>
+            <td><button @click="$emit('editar', turma)">Editar</button></td>
+          </tr>
+        </table>
+      </details>
+      <details>
+        <summary>Natação</summary>
+        <table>
+          <tr>
+            <th>Nome</th>
+            <th>Faixa Etária</th>
+            <th>Horário</th>
+            <th>Ações</th>
+          </tr>
+          <tr v-for="turma in filteredTurmas('natacao')" :key="turma.id">
+            <td>{{ turma.nome_turma }}</td>
+            <td>{{ turma.faixa_etaria }}</td>
+            <td>{{ turma.horario }} - {{ turma.dia_semana }}</td>
+            <td><button @click="$emit('editar', turma)">Editar</button></td>
+          </tr>
+        </table>
+      </details>
+      <details>
+        <summary>Hidroginástica</summary>
+        <table>
+          <tr>
+            <th>Nome</th>
+            <th>Faixa Etária</th>
+            <th>Horário</th>
+            <th>Ações</th>
+          </tr>
+          <tr v-for="turma in filteredTurmas('hidro')" :key="turma.id">
+            <td>{{ turma.nome_turma }}</td>
+            <td>{{ turma.faixa_etaria }}</td>
+            <td>{{ turma.horario }} - {{ turma.dia_semana }}</td>
+            <td><button @click="$emit('editar', turma)">Editar</button></td>
+            
+          </tr>
+        </table>
+      </details>
+    </section>
+  </div>
 </template>
 
 <script>
@@ -67,11 +64,12 @@ export default {
   name: "TabelaTurma",
   data() {
     return {
-      turmas: [], // Definindo a variável reativa corretamente
+      turmas: [],
     };
   },
   methods: {
     async fetchTurmas() {
+      if (this.turmas.length > 0) return; // Evita chamadas repetidas
       try {
         const response = await api.get("api/turmas/");
         this.turmas = response.data;
@@ -82,13 +80,34 @@ export default {
     filteredTurmas(modalidade) {
       return this.turmas.filter((turma) => turma.modalidade === modalidade);
     },
+    editItem(turma) {
+      console.log("Editing item:", turma);
+      if (!turma.id_turma) {
+        console.error("ID da turma não encontrado no objeto turma:", turma);
+        return;
+      }
+      this.editForm = { ...turma };
+      this.showModal = true;
+    },
+    async deleteItem(turma) {
+  if (!confirm(`Tem certeza que deseja excluir a turma ${turma.nome_turma}?`)) {
+    return;
+  }
+
+  try {
+    await api.delete(`/api/turmas/${turma.id}/`);
+    this.turmas = this.turmas.filter(t => t.id !== turma.id); // Atualiza a lista localmente
+  } catch (error) {
+    console.error("Erro ao apagar turma:", error);
+    alert("Erro ao apagar turma. Tente novamente.");
+  }
+}
   },
   mounted() {
     this.fetchTurmas();
   },
 };
 </script>
-
 <style>
   .form {
     text-decoration: none;

@@ -65,86 +65,75 @@
     <div class="buttonp">
             <button type="submit" class="btn-publicar">Publicar</button>
           </div>
-    <TabelaTurma />
+    <TabelaTurma @editar="editItem" />
   </div>
 
   <div class="bg2">
     <img src="/adm_dashboard/img/backazule.png" alt="" />
   </div>
 
-  <div id="modal" class="modal" v-if="showModal">
-    <div class="modal-content">
-      <span class="close" @click="closeModal">&times;</span>
-      <form id="editForm" @submit.prevent="submitEditForm">
-        <div class="form-groupmodal">
+<div id="modal" class="modal" v-if="showModal">
+  <div class="modal-content">
+    <span class="close" @click="closeModal">&times;</span>
+    <form id="editForm" @submit.prevent="submitEditForm">
+      <div class="form-groupmodal">
+        <div class="input-group">
+          <label for="nome">Nome:</label>
+          <input
+            type="text"
+            id="nome"
+            v-model="editForm.nome_turma"
+            required
+            placeholder="Nome da Turma"
+          />
+        </div>
+        <div class="input-group">
+          <label for="modalidade">Modalidade:</label>
+          <select v-model="editForm.modalidade" required>
+            <option value="">Selecione uma opção:</option>
+            <option value="natacao">Natação</option>
+            <option value="natacao_bb">Natação Bebê</option>
+            <option value="hidro">Hidroginástica</option>
+          </select>
+        </div>
+        <div class="input-row">
           <div class="input-group">
-            <label for="nome">Nome:</label>
-            <input
-              type="text"
-              id="nome"
-              v-model="editForm.nome_turma"
-              required
-              placeholder="Nome da Turma" />
+            <label for="horario">Horário:</label>
+            <input type="time" id="horario" v-model="editForm.horario" required />
           </div>
           <div class="input-group">
-            <label for="modalidade" class="modalidade">Modalidade:</label>
-            <select v-model="editForm.modalidade" required>
-              <option value="">Selecione uma opção:</option>
-              <option value="natacao">Natação</option>
-              <option value="natacao_bb">Natação Bebê</option>
-              <option value="hidro">Hidroginástica</option>
+            <label for="diaSemana">Dia da Semana:</label>
+            <select v-model="editForm.dia_semana" required>
+              <option value="Segunda">Segunda-Feira</option>
+              <option value="Terça">Terça-Feira</option>
+              <option value="Quarta">Quarta-Feira</option>
+              <option value="Quinta">Quinta-Feira</option>
+              <option value="Sexta">Sexta-Feira</option>
+              <option value="Sábado">Sábado</option>
             </select>
           </div>
-          <div class="input-row">
-            <div class="input-group">
-              <label for="horario">Horário:</label>
-              <input
-                type="time"
-                id="horario"
-                v-model="editForm.horario"
-                required />
-            </div>
-            <div class="input-group">
-              <label for="diaSemana">Dia da Semana:</label>
-              <select v-model="editForm.dia_semana" required>
-                <option value="">Selecione uma opção:</option>
-                <option value="Segunda">Segunda-Feira</option>
-                <option value="Terça">Terça-Feira</option>
-                <option value="Quarta">Quarta-Feira</option>
-                <option value="Quinta">Quinta-Feira</option>
-                <option value="Sexta">Sexta-Feira</option>
-                <option value="Sábado">Sábado</option>
-              </select>
-            </div>
+        </div>
+        <div class="input-row">
+          <div class="input-group">
+            <label for="idade">Faixa Etária:</label>
+            <select v-model="editForm.faixa_etaria" required>
+              <option value="6 meses a 2 anos - acompanhado">6 meses a 2 anos - acompanhado*</option>
+              <option value="2 a 3 anos de idade">2 a 3 anos de idade</option>
+              <option value="3 a 5 anos de idade">3 a 5 anos de idade</option>
+              <option value="6 a 9 anos de idade">6 a 9 anos de idade</option>
+              <option value="9 aos 14 anos de idade">9 aos 14 anos de idade</option>
+              <option value="+15">+15</option>
+            </select>
           </div>
-          <div class="input-row">
-            <div class="input-group">
-              <label for="idade">Faixa Etária:</label>
-              <select v-model="editForm.faixa_etaria" required>
-                <option value="">Selecione uma opção:</option>
-                <option value="6 meses a 2 anos - acompanhado">
-                  6 meses a 2 anos - acompanhado*
-                </option>
-                <option value="2 a 3 anos de idade">2 a 3 anos de idade</option>
-                <option value="3 a 5 anos de idade">3 a 5 anos de idade</option>
-                <option value="6 a 9 anos de idade">6 a 9 anos de idade</option>
-                <option value="9 aos 14 anos de idade">
-                  9 aos 14 anos de idade
-                </option>
-                <option value="+15">+15</option>
-              </select>
-            </div>
-            <div class="buttonea">
-              <button type="submit">Salvar</button>
-              <button type="button" @click="deleteItem(editForm.id)">
-                Apagar
-              </button>
-            </div>
+          <div class="buttonea">
+            <button type="submit">Salvar</button>
+            <button @click="deleteItem(editForm.id_turma)">Excluir</button>
           </div>
         </div>
-      </form>
-    </div>
+      </div>
+    </form>
   </div>
+</div>
 </template>
 
 <script>
@@ -157,6 +146,7 @@ export default {
   },
   data() {
     return {
+      exibirAcoes: true,
       form: {
         nome_turma: "",
         modalidade: "",
@@ -179,13 +169,14 @@ export default {
 
   methods: {
     async fetchTurmas() {
-      try {
-        const response = await api.get("api/turmas/");
-        this.turmas = response.data;
-      } catch (error) {
-        console.error("Erro ao buscar turmas:", error);
-      }
-    },
+  try {
+    const response = await api.get("api/turmas/");
+    this.turmas = response.data;
+    console.log("Turmas carregadas:", this.turmas);
+  } catch (error) {
+    console.error("Erro ao buscar turmas:", error);
+  }
+},
     async submitForm() {
       try {
         await api.post("api/turmas/", this.form);
@@ -197,33 +188,42 @@ export default {
       }
     },
     async submitEditForm() {
-      try {
-        if (!this.editForm.id_turma) {
-          console.error("ID da turma não encontrado");
-          return;
-        }
-        console.log("Submitting edit form:", this.editForm);
-        await api.put(`api/turmas/${this.editForm.id_turma}`, this.editForm);
-        this.fetchTurmas(); // Atualize a lista de turmas
-        this.closeModal();
-      } catch (error) {
-        console.error("Erro ao editar turma:", error);
-      }
-    },
-    async deleteItem(id_turma) {
-      try {
-        if (!id_turma) {
-          console.error("ID da turma não encontrado");
-          return;
-        }
-        console.log("Deleting item with id:", id_turma);
-        await api.delete(`api/turmas/${id_turma}`);
-        this.fetchTurmas(); // Atualize a lista de turmas
-        this.closeModal();
-      } catch (error) {
-        console.error("Erro ao apagar turma:", error);
-      }
-    },
+  try {
+    if (!this.editForm.id_turma) {
+      console.error("ID da turma não encontrado");
+      return;
+    }
+
+    console.log("Submitting edit form:", this.editForm);
+    await api.put(`api/turmas/${this.editForm.id_turma}/`, this.editForm);
+
+    alert("Turma editada com sucesso!");
+    this.fetchTurmas(); // Atualiza a lista de turmas
+    this.closeModal();
+  } catch (error) {
+    console.error("Erro ao editar turma:", error);
+  }
+},
+
+async deleteItem(id_turma) {
+  try {
+    if (!id_turma) {
+      console.error("ID da turma não encontrado");
+      return;
+    }
+
+    console.log("Deleting item with id:", id_turma);
+
+    if (confirm("Tem certeza que deseja excluir esta turma?")) {
+      await api.delete(`api/turmas/${id_turma}/`);
+      alert("Turma excluída com sucesso!");
+      this.fetchTurmas(); // Atualiza a lista de turmas
+      this.closeModal();
+    }
+  } catch (error) {
+    console.error("Erro ao apagar turma:", error);
+  }
+},
     editItem(turma) {
       console.log("Editing item:", turma);
       if (!turma.id_turma) {
@@ -248,7 +248,7 @@ export default {
     },
     resetEditForm() {
       this.editForm = {
-        id: null,
+        id_turma: null,
         nome_turma: "",
         modalidade: "",
         horario: "",
@@ -354,126 +354,7 @@ export default {
   display: flex;
   flex-direction: column;
 }
-/*=========== relatorio =============*/
-h1 {
-  font: 2rem "Futura LT Regular", sans-serif;
-  color: #02253b;
-  margin-left: 60px;
-  margin-bottom: 10px;
-}
-hr {
-  width: 100%;
-  height: 1px;
-  border: 0px;
-  border-top: 3px solid #f4af5e;
-}
-.grafics {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  height: 250px;
-}
-.graficos {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  margin-bottom: 20px;
-}
-.grafico1,
-.grafico2 {
-  flex: 1;
-  width: 45%;
-  height: 300px;
-}
 
-.grafico1 {
-  margin-left: 70px;
-}
-
-.grafico2 {
-  margin-left: 0;
-  width: 100%;
-  height: auto;
-}
-canvas {
-  max-width: 50%;
-  height: 150px;
-}
-
-section details summary {
-  font: 1.5rem "Futura LT", cursive;
-  color: #087285;
-  background-color: #d9d9d9;
-  padding: 1%;
-  border-radius: 10px;
-  margin-bottom: 10px;
-}
-
-table {
-  border-collapse: collapse;
-  align-items: center;
-  width: 90%;
-  margin: 10px auto;
-  background-color: #d9d9d9;
-  margin-top: -10px;
-  border-bottom-left-radius: 10px;
-  border-bottom-right-radius: 10px;
-}
-
-th {
-  font: 1.1rem "Futura LT", cursive;
-  color: #087285;
-  border-top: 1px solid #60b4c3;
-}
-td {
-  font: 0.9rem "Futura LT";
-  color: #02253b;
-}
-
-th,
-td {
-  padding: 10px;
-  text-align: center;
-  border-bottom: 1px solid #60b4c3;
-  border-right: 1px solid #60b4c3;
-}
-th:last-child,
-td:last-child {
-  border-right: none; /* Remova a borda à direita para a última célula de cada linha */
-}
-
-tr:last-child th,
-tr:last-child td {
-  border-bottom: none; /* Remova a borda inferior para a última linha */
-}
-
-.turmas {
-  padding: 10px;
-}
-
-.slide1,
-.slide2 {
-  background-color: #ccc;
-  display: flex;
-  max-width: 100%;
-  margin-bottom: 20px;
-  align-items: center;
-  border-radius: 3%;
-  margin: 10px;
-}
-
-.slide1 img,
-.slide2 img {
-  max-width: 30%;
-  align-items: center;
-  border-radius: 10px;
-  padding-top: 0;
-}
-p {
-  font-family: "Futura LT Regular";
-  color: #087285;
-  font-size: bold;
-}
 
 /* ------------------Turmas----------------- */
 

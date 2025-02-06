@@ -1,12 +1,61 @@
 <template>
-    <section>
-      <h1 id="3">Turmas</h1>
+  <h1 id="3">Turmas</h1>
       <div class="turmas">
         <section class="turmas">
-          <TabelaTurma/>
+<details>
+        <summary class="natacaobb">Natação bebê</summary>
+        <table>
+            <tr>
+              <th>Nome</th>
+              <th>Faixa Etária</th>
+              <th>Vagas</th>
+              <th>Horário</th>
+            </tr>
+            <tr>
+            <td>Natação para Bebê</td>
+            <td>6 meses a 2 anos - acompanhado</td>
+            <td>0</td>
+            <td>T &amp; Q - 11h</td>
+        </tr>
+          </table>
+    </details>
+    <details>
+        <summary>Natação</summary>
+        <table>
+            <tr>
+              <th>Categoria</th>
+              <th>Faixa Etária</th>
+              <th>Vagas</th>
+              <th>Horário</th>
+            </tr>
+            <tr>
+            <td>Adaptação I &amp; II</td>
+            <td>Adulto &amp; Infantil</td>
+            <td>0</td>
+            <td>Segunda à sábado Diurno</td>
+        </tr>
+          </table>
+    </details>
+    <details>
+        <summary>Hidroginástica</summary>
+        <table>
+            <tr>
+              <th>Categoria</th>
+              <th>Faixa Etária</th>
+              <th>Vagas</th>
+              <th>Horário</th>
+              
+            </tr>
+            <tr>
+            <td>Hidroginástica</td>
+            <td>Terceira idade</td>
+            <td>0</td>
+            <td>Segunda à sábado Diurno</td>
+        </tr>
+          </table>
+        </details>
     </section>
     </div>
-    </section>
     <div id="4" class="containerform">
       <h2 class="form"> <router-link to="/Formulario">
               Formulário de Inscrição
@@ -134,6 +183,9 @@
     border-radius: 9px;
     margin-bottom: 9px;
   }
+.natacaobb{
+  margin-top: 50px;
+}
   
   /*tabela das turmas*/
   table {
@@ -147,6 +199,7 @@
   th {
     font: 1.5rem 'Futura LT', cursive;
     color: #02253B;
+    display: none;
   }
   
   td {
@@ -198,6 +251,9 @@
     border-radius: 10px;
     object-fit: cover;
   }
+h1{
+    margin-bottom: 10px;
+}
   
   .caption {
     color: #02253B;

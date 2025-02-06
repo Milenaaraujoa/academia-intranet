@@ -99,7 +99,7 @@
       <div class="card3">
         <h1 id="3">T U R M A S</h1>
       
-      <TabelaTurma />
+      <TabelaTurma  />
 
       <router-link to="/turmas">
         <button class="button_1">Editar</button>
@@ -638,7 +638,7 @@ button {
 }
 
 .button1 {
-    text-align: right;
+    text-align: left;
 }
 
 
@@ -832,6 +832,11 @@ export default {
   name: "GraficoTurma",
   components: {
     TabelaTurma,
+  },
+  data() {
+    return {
+      exibirAcoes: false, // Defina como false para ocultar os botões
+    };
   },
   setup() {
     const modalidades = ref([]);
