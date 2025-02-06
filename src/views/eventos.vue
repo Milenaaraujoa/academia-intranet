@@ -450,4 +450,84 @@ button {
     padding: 10px;
     object-fit: cover;
 }
+
+/*======================MODAL=======================*/
+
+/* Ajuste o modal para o mesmo tamanho do container */
+.modal {
+  display: block;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+
+  background-color: rgba(0, 0, 0, 0.5); /* Fundo preto com opacidade */
+}
+
+/* Definir o conteúdo do modal para ter o mesmo tamanho do container */
+.modal-content {
+  background-color: #60b4c3;
+  align-items: center;
+  border-radius: 4%;
+  border-end-end-radius: 4%;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 100%;
+  max-width: 800px;
+  height: auto;
+  max-height: 80%;
+  overflow-y: auto;
+}
+.formodal {
+  display: flex;
+  gap: 100px;
+  background-color: #02253b;
+  border-radius: 4%;
+  width: 100%;
+  padding: 20px;
+  margin-bottom: 10px;
+}
+
+.formodal input[type="text"],
+input[type="date"],
+input[type="time"] {
+  height: 35px;
+  margin: 5px;
+}
+
+.evento1_modal {
+  background-color: #ccc;
+  text-align: center;
+  align-items: center;
+  max-width: 50%;
+  margin-bottom: 20px;
+  align-items: center;
+  border-radius: 3%;
+  margin: 10px;
+  height: 50vh;
+}
+.evento1_modal img {
+  align-items: center;
+  width: 90%;
+  margin: 0;
+  margin-bottom: 50px;
+  border-radius: 10%;
+}
+/* Estilo para o botão de fechar */
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
 </style>

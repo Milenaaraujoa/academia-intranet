@@ -56,6 +56,7 @@
           </table>
         </details>
       </section>
+      <button @click="$emit('editarTurma', turma)">Editar</button>
     </div>
 </template>
 

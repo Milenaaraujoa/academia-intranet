@@ -60,13 +60,14 @@
           </div>
           
         </div>
+        <div class="buttonp">
+            <button type="submit" class="btn-publicar">Publicar</button>
+          </div>
       </form>
       
     </div>
-    <div class="buttonp">
-            <button type="submit" class="btn-publicar">Publicar</button>
-          </div>
-    <TabelaTurma />
+    
+    <TabelaTurma @editarTurma="editItem"/>
   </div>
 
   <div class="bg2">
@@ -539,6 +540,7 @@ button {
 }
 .btn-publicar{
   margin-left: 900px;
+  margin-top: 20px;
 }
 
 /*=====================EVENTOS===================*/
@@ -602,7 +604,7 @@ button {
 
 /* Ajuste o modal para o mesmo tamanho do container */
 .modal {
-  display: none;
+  display: block;
   position: fixed;
   z-index: 1;
   left: 0;
