@@ -49,7 +49,7 @@
             <br /><br />
           </div>
         </div>
-        <div class="form-group">
+        <div v-if="idade <= 15" class="form-group">
           <div class="input-group">
             <label for="nomeResponsavel">Nome do responsável:</label><br />
             <input
@@ -135,8 +135,9 @@
         <label for="turmas">Turmas:</label>
         <select id="turmas" v-model="form.turma">
           <option value="Selecione">Selecione</option>
-          <option value="natacao_bb">Ter e Qui - 11:00 0 16:40 - 17:20</option>
-          <option value="natacao">Sáb - 08:20 - 9h - 10:40 - 11:25</option>
+          <option v-for="turma in turmas" :key="turma.id" :value="turma.id">
+            {{ turma.nome_turma }} - {{ turma.horario }} - {{ turma.dia_semana }}
+          </option>
         </select>
 
         <br />
@@ -170,11 +171,31 @@ export default {
         modalidade: 'Selecione',
         turma: 'Selecione'
       },
+      turmas: [], // Adiciona um array para armazenar as turmas
       cpfError: false,
       cepError: false
     };
   },
   methods: {
+    async fetchTurmas() {
+      try {
+        const response = await fetch('http://127.0.0.1:8000/api/turmas/');
+        const data = await response.json();
+        this.turmas = data;
+      } catch (error) {
+        console.error('Erro ao buscar turmas:', error);
+      }
+    },
+    calcularIdade() {
+      const hoje = new Date();
+      const nascimento = new Date(this.form.datanasc);
+      let idade = hoje.getFullYear() - nascimento.getFullYear();
+      const mes = hoje.getMonth() - nascimento.getMonth();
+      if (mes < 0 || (mes === 0 && hoje.getDate() < nascimento.getDate())) {
+        idade--;
+      }
+      this.idade = idade;
+    },
     formatarCpf() {
       let cpf = String(this.form.cpf).replace(/\D/g, ""); // Remove caracteres não numéricos
 
@@ -345,11 +366,12 @@ export default {
         turma: 'Selecione'
       };
     }
+  },
+  mounted() {
+    this.fetchTurmas(); // Busca as turmas quando o componente é montado
   }
 };
 </script>
-
-
 
 <style>
 /*FORMULÁRIO*/
