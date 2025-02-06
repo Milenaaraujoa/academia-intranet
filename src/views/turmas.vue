@@ -58,16 +58,14 @@
               </select>
             </div>
           </div>
-          
         </div>
-        <div class="buttonp">
-            <button type="submit" class="btn-publicar">Publicar</button>
-          </div>
       </form>
       
     </div>
-    
-    <TabelaTurma @editarTurma="editItem"/>
+    <div class="buttonp">
+            <button type="submit" class="btn-publicar">Publicar</button>
+          </div>
+    <TabelaTurma />
   </div>
 
   <div class="bg2">
@@ -136,13 +134,13 @@
                 <option value="+15">+15</option>
               </select>
             </div>
+            <div class="buttonea">
+              <button type="submit">Salvar</button>
+              <button type="button" @click="deleteItem(editForm.id)">
+                Apagar
+              </button>
+            </div>
           </div>
-        </div>
-        <div class="buttonea">
-          <button type="submit">Salvar</button>
-          <button type="button" @click="deleteItem(editForm.id_turma)">
-            Apagar
-          </button>
         </div>
       </form>
     </div>
@@ -154,7 +152,6 @@ import api from "@/services/api";
 import TabelaTurma from "@/components/TabelaTurma.vue";
 
 export default {
-  name: "Turmas",
   components: {
     TabelaTurma,
   },
@@ -176,17 +173,69 @@ export default {
         faixa_etaria: "",
       },
       showModal: false,
+      turmas: [],
     };
   },
+
   methods: {
+    async fetchTurmas() {
+      try {
+        const response = await api.get("api/turmas/");
+        this.turmas = response.data;
+      } catch (error) {
+        console.error("Erro ao buscar turmas:", error);
+      }
+    },
     async submitForm() {
       try {
         await api.post("api/turmas/", this.form);
         alert("Turma adicionada com sucesso!");
+        this.fetchTurmas();
         this.resetForm();
       } catch (error) {
         console.error("Erro ao adicionar turma:", error);
       }
+    },
+    async submitEditForm() {
+      try {
+        if (!this.editForm.id_turma) {
+          console.error("ID da turma não encontrado");
+          return;
+        }
+        console.log("Submitting edit form:", this.editForm);
+        await api.put(`api/turmas/${this.editForm.id_turma}`, this.editForm);
+        this.fetchTurmas(); // Atualize a lista de turmas
+        this.closeModal();
+      } catch (error) {
+        console.error("Erro ao editar turma:", error);
+      }
+    },
+    async deleteItem(id_turma) {
+      try {
+        if (!id_turma) {
+          console.error("ID da turma não encontrado");
+          return;
+        }
+        console.log("Deleting item with id:", id_turma);
+        await api.delete(`api/turmas/${id_turma}`);
+        this.fetchTurmas(); // Atualize a lista de turmas
+        this.closeModal();
+      } catch (error) {
+        console.error("Erro ao apagar turma:", error);
+      }
+    },
+    editItem(turma) {
+      console.log("Editing item:", turma);
+      if (!turma.id_turma) {
+        console.error("ID da turma não encontrado no objeto turma:", turma);
+        return;
+      }
+      this.editForm = { ...turma };
+      this.showModal = true;
+    },
+    closeModal() {
+      this.showModal = false;
+      this.resetEditForm();
     },
     resetForm() {
       this.form = {
@@ -197,35 +246,22 @@ export default {
         faixa_etaria: "",
       };
     },
-    editItem(turma) {
-      if (turma) {
-        this.editForm = { ...turma };
-        this.showModal = true;
-      }
+    resetEditForm() {
+      this.editForm = {
+        id: null,
+        nome_turma: "",
+        modalidade: "",
+        horario: "",
+        dia_semana: "",
+        faixa_etaria: "",
+      };
     },
-    async submitEditForm() {
-      try {
-        await api.put(`api/turmas/${this.editForm.id_turma}/`, this.editForm);
-        alert("Turma atualizada!");
-        this.showModal = false;
-      } catch (error) {
-        console.error("Erro ao atualizar turma:", error);
-      }
+    filteredTurmas(modalidade) {
+      return this.turmas.filter((turma) => turma.modalidade === modalidade);
     },
-    async deleteItem(id) {
-      if (confirm("Tem certeza que deseja excluir esta turma?")) {
-        try {
-          await api.delete(`api/turmas/${id}/`);
-          alert("Turma excluída!");
-          this.showModal = false;
-        } catch (error) {
-          console.error("Erro ao excluir turma:", error);
-        }
-      }
-    },
-    closeModal() {
-      this.showModal = false;
-    },
+  },
+  mounted() {
+    this.fetchTurmas();
   },
 };
 </script>
@@ -411,7 +447,6 @@ tr:last-child td {
   border-bottom: none; /* Remova a borda inferior para a última linha */
 }
 
-
 .turmas {
   padding: 10px;
 }
@@ -493,7 +528,7 @@ select {
   margin-left: 30px;
 }
 
-.select{
+.select {
   margin-left: -1px;
 }
 
@@ -508,7 +543,7 @@ input[type="time"] {
   margin-left: 8px;
 }
 
-.horario{
+.horario {
   margin-right: 10px;
 }
 
@@ -538,7 +573,7 @@ button {
   text-align: right;
   position: right;
 }
-.btn-publicar{
+.btn-publicar {
   margin-left: 900px;
   margin-top: 20px;
 }
