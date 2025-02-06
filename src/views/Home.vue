@@ -2,72 +2,25 @@
     <section>
       <h1 id="3">Turmas</h1>
       <div class="turmas">
-        <details>
-          <summary>Natação bebê</summary>
-          <table>
-            <thead>
-              <tr>
-                <th>Categoria</th>
-                <th>Faixa Etária</th>
-                <th>Vagas</th>
-                <th>Horário</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Natação para Bebê</td>
-                <td>6 meses a 2 anos - acompanhado</td>
-                <td>0</td>
-                <td>T &amp; Q - 11h</td>
-              </tr>
-            </tbody>
-          </table>
-        </details>
-        <details>
-          <summary>Natação</summary>
-          <table>
-            <thead>
-              <tr>
-                <th>Categoria</th>
-                <th>Faixa Etária</th>
-                <th>Vagas</th>
-                <th>Horário</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Adaptação I &amp; II</td>
-                <td>Adulto &amp; Infantil</td>
-                <td>0</td>
-                <td>Segunda à sábado Diurno</td>
-              </tr>
-            </tbody>
-          </table>
-        </details>
-        <details>
-          <summary>Hidroginástica</summary>
-          <table>
-            <thead>
-              <tr>
-                <th>Categoria</th>
-                <th>Faixa Etária</th>
-                <th>Vagas</th>
-                <th>Horário</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Hidroginástica</td>
-                <td>Terceira idade</td>
-                <td>0</td>
-                <td>Segunda à sábado Diurno</td>
-              </tr>
-            </tbody>
-          </table>
-        </details>
-      </div>
+        <section class="turmas">
+      <details v-for="(grupo, modalidade) in turmasPorModalidade" :key="modalidade">
+        <summary>{{ modalidade }}</summary>
+        <table>
+          <tr>
+            <th>Modalidade</th>
+            <th>Faixa Etária</th>
+            <th>Horário</th>
+          </tr>
+          <tr v-for="turma in grupo" :key="turma.id_turma">
+            <td>{{ turma.modalidade }}</td>
+            <td>{{ turma.faixa_etaria }}</td>
+            <td>{{ turma.dia_semana }} - {{ turma.horario }}</td>
+          </tr>
+        </table>
+      </details>
     </section>
-  
+    </div>
+    </section>
     <div id="4" class="containerform">
       <h2 class="form"> <router-link to="/Formulario">
               Formulário de Inscrição
@@ -99,39 +52,71 @@
   </template>
   
   <script>
+  import { ref, computed } from 'vue'; // Certifique-se de importar o ref e computed
+  import axios from 'axios';
   export default {
-    data() {
-      return {
-        slideIndex: 0,
-        visibleSlides: 3,
-      };
-    },
-    methods: {
-      moveCarousel(n) {
-        const slidesWrapper = this.$refs.carouselWrapper;
-        const slides = slidesWrapper.children;
-        const totalSlides = slides.length;
-        const slideWidth = 100 / this.visibleSlides;
-  
-        // Previne movimento enquanto o slide está sendo animado
-        if (slidesWrapper.style.transitionDuration !== '0.5s') {
-          slidesWrapper.style.transitionDuration = '0.5s';
+  setup() {
+    const slideIndex = ref(0);
+    const visibleSlides = ref(3);
+    const turmas = ref([]);
+
+    // Buscar os dados da API
+    const fetchTurmas = async () => {
+      try {
+        const response = await axios.get("http://127.0.0.1:8000/api/turmas/");
+        turmas.value = response.data;
+      } catch (error) {
+        console.error("Erro ao carregar turmas:", error);
+      }
+    };
+
+    // Computed para agrupar as turmas por modalidade
+    const turmasPorModalidade = computed(() => {
+      return turmas.value.reduce((acc, turma) => {
+        if (!acc[turma.modalidade]) {
+          acc[turma.modalidade] = [];
         }
-  
-        this.slideIndex += n;
-  
-        // Ajustar slideIndex para que ele rode dentro dos limites
-        if (this.slideIndex >= totalSlides) {
-          this.slideIndex = 0;
-        } else if (this.slideIndex < 0) {
-          this.slideIndex = totalSlides - 1;
-        }
-  
-        const offset = -this.slideIndex * slideWidth;
-        slidesWrapper.style.transform = `translateX(${offset}%)`;
-      },
-    },
-  };
+        acc[turma.modalidade].push(turma);
+        return acc;
+      }, {});
+    });
+
+    const moveCarousel = (n) => {
+      const slidesWrapper = document.querySelector(".carousel-wrapper");
+      const slides = slidesWrapper.children;
+      const totalSlides = slides.length;
+      const slideWidth = 100 / visibleSlides.value;
+
+      // Previne movimento enquanto o slide está sendo animado
+      if (slidesWrapper.style.transitionDuration !== '0.5s') {
+        slidesWrapper.style.transitionDuration = '0.5s';
+      }
+
+      slideIndex.value += n;
+
+      // Ajustar slideIndex para que ele rode dentro dos limites
+      if (slideIndex.value >= totalSlides) {
+        slideIndex.value = 0;
+      } else if (slideIndex.value < 0) {
+        slideIndex.value = totalSlides - 1;
+      }
+
+      const offset = -slideIndex.value * slideWidth;
+      slidesWrapper.style.transform = `translateX(${offset}%)`;
+    };
+
+    // Chamada para carregar os dados de turmas quando o componente for montado
+    fetchTurmas();
+
+    return {
+      slideIndex,
+      visibleSlides,
+      turmas,
+      turmasPorModalidade,
+      moveCarousel
+    };
+  }
+};
   </script>
   
   <style scoped>
